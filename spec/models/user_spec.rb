@@ -17,12 +17,20 @@ RSpec.describe User, type: :model do
   describe 'class methods' do
     describe 'merchant stats' do
       before :each do
-        @user_1 = create(:user, city: 'Denver', state: 'CO')
-        @user_2 = create(:user, city: 'NYC', state: 'NY')
-        @user_3 = create(:user, city: 'Seattle', state: 'WA')
-        @user_4 = create(:user, city: 'Seattle', state: 'FL')
+        @user_1 = create(:user)
+        create(:address, user: @user_1, city: 'Denver', state: 'CO')
+        @user_2 = create(:user)
+        create(:address, user: @user_2, city: 'NYC', state: 'NY')
+        @user_3 = create(:user)
+        create(:address, user: @user_3, city: 'Seattle', state: 'WA')
+        @user_4 = create(:user)
+        create(:address, user: @user_4, city: 'Seattle', state: 'FL')
 
         @merchant_1, @merchant_2, @merchant_3 = create_list(:merchant, 3)
+        create(:address, user: @merchant_1)
+        create(:address, user: @merchant_2)
+        create(:address, user: @merchant_3)
+
         @item_1 = create(:item, user: @merchant_1)
         @item_2 = create(:item, user: @merchant_2)
         @item_3 = create(:item, user: @merchant_3)
@@ -103,10 +111,14 @@ RSpec.describe User, type: :model do
 
     describe 'merchant stats methods' do
       before :each do
-        @user_1 = create(:user, city: 'Springfield', state: 'MO')
-        @user_2 = create(:user, city: 'Springfield', state: 'CO')
-        @user_3 = create(:user, city: 'Las Vegas', state: 'NV')
-        @user_4 = create(:user, city: 'Denver', state: 'CO')
+        @user_1 = create(:user)
+        create(:address, user: @user_1, city: 'Springfield', state: 'MO')
+        @user_2 = create(:user)
+        create(:address, user: @user_2, city: 'Springfield', state: 'CO')
+        @user_3 = create(:user)
+        create(:address, user: @user_3, city: 'Las Vegas', state: 'NV')
+        @user_4 = create(:user)
+        create(:address, user: @user_4, city: 'Denver', state: 'CO')
 
         @merchant = create(:merchant)
         @item_1, @item_2, @item_3, @item_4 = create_list(:item, 4, user: @merchant, inventory: 20)

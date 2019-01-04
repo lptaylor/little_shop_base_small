@@ -2,8 +2,11 @@
 <%= tag.div class: 'profile' do %>
   <p><%= @user.email %></p>
   <%= tag.div id: 'address' do %>
-    <p><%= @user.address %><br/>
-    <%= @user.city %>, <%= @user.state %> <%= @user.zip %></p>
+    <% @user.addresses.each do |full_address| %>
+      <%= full_address.nickname %>
+      <%= full_address.address %>
+      <%= full_address.city %>, <%= full_address.state %> <%= full_address.zip %>
+    <% end %>
   <% end %>
 
   <% if @user == current_user %>

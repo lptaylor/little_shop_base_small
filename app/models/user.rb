@@ -5,6 +5,7 @@ class User < ApplicationRecord
   has_many :orders
   has_many :order_items, through: :orders
   has_many :addresses
+  accepts_nested_attributes_for :addresses
 
   validates_presence_of :name
   validates :email, presence: true, uniqueness: true
@@ -68,8 +69,8 @@ class User < ApplicationRecord
   end
 
   def top_3_states
-    Item.joins('inner join order_items oi on oi.item_id=items.id inner join orders o on o.id=oi.order_id inner join users u on o.user_id=u.id')
-      .select('u.state, sum(oi.quantity) as quantity_shipped')
+    Item.joins('inner join order_items oi on oi.item_id=items.id inner join orders o on o.id=oi.order_id inner join users u on o.user_id=u.id inner join addresses a on a.user_id=u.id')
+      .select('a.state, sum(oi.quantity) as quantity_shipped')
       .where("oi.fulfilled = ? AND items.merchant_id=?", true, self.id)
       .group(:state)
       .order('quantity_shipped desc')
@@ -77,8 +78,8 @@ class User < ApplicationRecord
   end
 
   def top_3_cities
-    Item.joins('inner join order_items oi on oi.item_id=items.id inner join orders o on o.id=oi.order_id inner join users u on o.user_id=u.id')
-      .select('u.city, u.state, sum(oi.quantity) as quantity_shipped')
+    Item.joins('inner join order_items oi on oi.item_id=items.id inner join orders o on o.id=oi.order_id inner join users u on o.user_id=u.id inner join addresses a on a.user_id=u.id')
+      .select('a.city, a.state, sum(oi.quantity) as quantity_shipped')
       .where("oi.fulfilled = ? AND items.merchant_id=?", true, self.id)
       .group(:state, :city)
       .order('quantity_shipped desc')

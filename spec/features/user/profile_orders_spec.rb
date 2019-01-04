@@ -5,10 +5,13 @@ include ActionView::Helpers::NumberHelper
 RSpec.describe 'Profile Orders page', type: :feature do
   before :each do
     @user = create(:user)
+    create(:address, user: @user)
     @admin = create(:admin)
-
+    create(:address, user: @admin)
     @merchant_1 = create(:merchant)
+    create(:address, user: @merchant_1)
     @merchant_2 = create(:merchant)
+    create(:address, user: @merchant_2)
 
     @item_1 = create(:item, user: @merchant_1)
     @item_2 = create(:item, user: @merchant_2)

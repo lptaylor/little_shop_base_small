@@ -77,8 +77,8 @@ RSpec.describe 'Merchant Dashboard page' do
         expect(current_path).to eq(dashboard_order_path(order))
         within '#user-details' do
           expect(page).to have_content(user.name)
-          expect(page).to have_content(user.address)
-          expect(page).to have_content("#{user.city}, #{user.state} #{user.zip}")
+          expect(page).to have_content(user.addresses.address)
+          expect(page).to have_content("#{user.addresses.city}, #{user.addresses.state} #{user.addresses.zip}")
         end
         within '#order-details' do
           expect(page).to_not have_css("#item-#{item_2.id}")

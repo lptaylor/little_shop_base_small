@@ -7,11 +7,8 @@ RSpec.describe Address, type: :model do
       it { should validate_presence_of :zip }
     end
 
-    describe  'factory can make an address' do
-      it 'makes address' do
-        address_1 = create(:address)
-
-        expect(address_1.class).to eq(Address)
-      end
+    describe 'relationships' do
+      it { should belong_to :user }
     end
+
 end
