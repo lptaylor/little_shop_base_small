@@ -1,12 +1,9 @@
 FactoryBot.define do
   factory :user, class: User do
+    association :address
     sequence(:email) { |n| "user_#{n}@gmail.com" }
     sequence(:password) { "password" }
     sequence(:name) { |n| "User Name #{n}" }
-    sequence(:address) { |n| "Address #{n}" }
-    sequence(:city) { |n| "City #{n}" }
-    sequence(:state) { |n| "State #{n}" }
-    sequence(:zip) { |n| "Zip #{n}" }
     role { 0 }
     active { true }
   end
