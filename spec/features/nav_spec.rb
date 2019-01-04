@@ -2,7 +2,6 @@ require 'rails_helper'
 
 RSpec.describe 'Site Nav', type: :feature do
   before :each do
-    binding.pry
     @user = create(:user)
     @merchant = create(:merchant)
     @admin = create(:admin)

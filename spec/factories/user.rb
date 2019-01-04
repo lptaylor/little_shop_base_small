@@ -1,6 +1,5 @@
 FactoryBot.define do
   factory :user, class: User do
-    association :address
     sequence(:email) { |n| "user_#{n}@gmail.com" }
     sequence(:password) { "password" }
     sequence(:name) { |n| "User Name #{n}" }
