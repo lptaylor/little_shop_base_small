@@ -6,6 +6,7 @@ RSpec.describe 'Merchant Dashboard page' do
   context 'as a merchant' do
     it 'should show my dashboard information' do
       merchant = create(:merchant)
+      create(:address, user: merchant)
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(merchant)
 
       visit dashboard_path
@@ -13,8 +14,7 @@ RSpec.describe 'Merchant Dashboard page' do
       expect(page).to have_content("Merchant Dashboard for #{merchant.name}")
       expect(page).to have_content(merchant.email)
       within '#address' do
-        expect(page).to have_content(merchant.address)
-        expect(page).to have_content("#{merchant.city}, #{merchant.state} #{merchant.zip}")
+        expect(page).to have_content("#{merchant.primary_address.city}, #{merchant.primary_address.state} #{merchant.primary_address.zip}")
       end
       expect(page).to_not have_link('Edit Profile')
     end
@@ -30,6 +30,7 @@ RSpec.describe 'Merchant Dashboard page' do
       end
       scenario 'when I have orders pending' do
         merchant = create(:merchant)
+        create(:address, user: merchant)
         item = create(:item, user: merchant)
         orders = create_list(:order, 2)
         create(:order_item, order: orders[0], item: item, price: 1, quantity: 1)
@@ -54,8 +55,11 @@ RSpec.describe 'Merchant Dashboard page' do
     describe 'when I have orders with items I sell' do
       it 'allows me to fulfill those parts of an order' do
         user = create(:user)
+        create(:address, user: user)
         merchant = create(:merchant)
+        create(:address, user: merchant)
         merchant_2 = create(:merchant)
+        create(:address, user: merchant_2)
         item = create(:item, user: merchant, inventory: 100)
         item_3 = create(:item, user: merchant)
         item_2 = create(:item, user: merchant_2)
@@ -77,8 +81,8 @@ RSpec.describe 'Merchant Dashboard page' do
         expect(current_path).to eq(dashboard_order_path(order))
         within '#user-details' do
           expect(page).to have_content(user.name)
-          expect(page).to have_content(user.addresses.address)
-          expect(page).to have_content("#{user.addresses.city}, #{user.addresses.state} #{user.addresses.zip}")
+          expect(page).to have_content(user.addresses[0].address)
+          expect(page).to have_content("#{user.addresses[0].city}, #{user.addresses[0].state} #{user.addresses[0].zip}")
         end
         within '#order-details' do
           expect(page).to_not have_css("#item-#{item_2.id}")
@@ -158,10 +162,14 @@ RSpec.describe 'Merchant Dashboard page' do
     end
     describe 'should show some statistics' do
       before :each do
-        user_1 = create(:user, city: 'Springfield', state: 'MO')
-        user_2 = create(:user, city: 'Springfield', state: 'CO')
-        user_3 = create(:user, city: 'Las Vegas', state: 'NV')
-        user_4 = create(:user, city: 'Denver', state: 'CO')
+        user_1 = create(:user)
+        create(:address, user: user_1, city: 'Springfield', state: 'MO')
+        user_2 = create(:user)
+        create(:address, user: user_2, city: 'Springfield', state: 'CO')
+        user_3 = create(:user)
+        create(:address, user: user_3, city: 'Las Vegas', state: 'NV')
+        user_4 = create(:user)
+        create(:address, user: user_4, city: 'Denver', state: 'CO')
 
         merchant = create(:merchant)
         @item_1, @item_2, @item_3, @item_4 = create_list(:item, 4, user: merchant, inventory: 20)

@@ -14,10 +14,14 @@ RSpec.describe Order, type: :model do
   describe 'class methods' do
     describe 'merchant stats' do
       before :each do
-        @user_1 = create(:user, city: 'Denver', state: 'CO')
-        @user_2 = create(:user, city: 'NYC', state: 'NY')
-        @user_3 = create(:user, city: 'Seattle', state: 'WA')
-        @user_4 = create(:user, city: 'Seattle', state: 'CO')
+        @user_1 = create(:user)
+        create(:address, user: @user_1, city: 'Denver', state: 'CO')
+        @user_2 = create(:user)
+        create(:address, user: @user_2, city: 'NYC', state: 'NY')
+        @user_3 = create(:user)
+        create(:address, user: @user_3, city: 'Seattle', state: 'WA')
+        @user_4 = create(:user)
+        create(:address, user: @user_4, city: 'Seattle', state: 'CO')
 
         @merchant_1 = create(:merchant, name: 'Merchant Name 1')
         @merchant_2 = create(:merchant, name: 'Merchant Name 2')

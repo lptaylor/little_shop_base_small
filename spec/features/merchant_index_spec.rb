@@ -3,24 +3,31 @@ require 'rails_helper'
 RSpec.describe 'Merchant Index Page', type: :feature do
   before :each do
     @merchant = create(:merchant)
+    create(:address, user: @merchant)
     @inactive_merchant = create(:inactive_merchant)
+    create(:address, user: @inactive_merchant)
+    # binding.pry
   end
   context 'as a non-admin user' do
     it 'should show all active merchants' do
       visit merchants_path
 
       within "#merchant-#{@merchant.id}" do
-        expect(page).to have_content("#{@merchant.name}, #{@merchant.city} #{@merchant.state}")
+        expect(page).to have_content("#{@merchant.name}, #{@merchant.primary_address.city} #{@merchant.primary_address.state}")
         expect(page).to have_content(@merchant.created_at)
       end
       expect(page).to_not have_content(@inactive_merchant.name)
     end
     describe 'it shows statistics' do
       before :each do
-        @user_1 = create(:user, city: 'Denver', state: 'CO')
-        @user_2 = create(:user, city: 'NYC', state: 'NY')
-        @user_3 = create(:user, city: 'Seattle', state: 'WA')
-        @user_4 = create(:user, city: 'Seattle', state: 'FL')
+        @user_1 = create(:user)
+        create(:address, user: @user_1, city: 'Denver', state: 'CO')
+        @user_2 = create(:user)
+        create(:address, user: @user_2, city: 'NYC', state: 'NY')
+        @user_3 = create(:user)
+        create(:address, user: @user_2, city: 'Seattle', state: 'WA')
+        @user_4 = create(:user)
+        create(:address, user: @user_2, city: 'Seattle', state: 'FL')
 
         @merchant_1 = create(:merchant, name: 'Merchant Name 1')
         @merchant_2 = create(:merchant, name: 'Merchant Name 2')
@@ -123,13 +130,13 @@ NYC, Seattle WA, Seattle FL
 
       within "#merchant-#{@merchant.id}" do
         expect(page).to have_link(@merchant.name)
-        expect(page).to have_content("#{@merchant.name}, #{@merchant.city} #{@merchant.state}")
+        expect(page).to have_content("#{@merchant.name}, #{@merchant.primary_address.city} #{@merchant.primary_address.state}")
         expect(page).to have_content(@merchant.created_at)
         expect(page).to have_button('Disable')
       end
       within "#merchant-#{@inactive_merchant.id}" do
         expect(page).to have_link(@inactive_merchant.name)
-        expect(page).to have_content("#{@inactive_merchant.name}, #{@inactive_merchant.city} #{@inactive_merchant.state}")
+        expect(page).to have_content("#{@inactive_merchant.name}, #{@inactive_merchant.primary_address.city} #{@inactive_merchant.primary_address.state}")
         expect(page).to have_content(@inactive_merchant.created_at)
         expect(page).to have_button('Enable')
       end

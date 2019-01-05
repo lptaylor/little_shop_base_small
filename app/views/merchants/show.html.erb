@@ -3,8 +3,9 @@
 <%= tag.div class: 'profile' do %>
   <p><%= @merchant.email %></p>
   <%= tag.div id: 'address' do %>
-    <p><%= @merchant.address %><br/>
-    <%= @merchant.city %>, <%= @merchant.state %> <%= @merchant.zip %></p>
+  <% @merchant.addresses.each  do |full_address| %>
+    <%= full_address.city %>, <%= full_address.state %> <%= full_address.zip %></td>
+  <% end %>
   <% end %>
 <% end %>
 
