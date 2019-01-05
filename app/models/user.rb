@@ -17,6 +17,10 @@ class User < ApplicationRecord
     addresses.find_by(default_address: true)
   end
 
+  def non_primary_addresses
+    addresses.find_by(default_address: false)
+  end
+
   def self.top_3_revenue_merchants
     User.joins(items: :order_items)
       .select('users.*, sum(order_items.quantity * order_items.price) as revenue')

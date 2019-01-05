@@ -2,14 +2,19 @@
 <%= tag.div class: 'profile' do %>
   <p><%= @user.email %></p>
   <%= tag.div id: 'address' do %>
+    <div class="default_address-<%= @user.primary_address.id %>">
+      This is your default address
+      <%= @user.primary_address.nickname %>
+      <%= @user.primary_address.address %>
+      <%= @user.primary_address.city %>, <%= @user.primary_address.state %> <%= @user.primary_address.zip %>
+      <%= link_to 'Edit This Address', edit_profile_addresses_path(@user)%>
+    </div>
     <% @user.addresses.each do |full_address| %>
     <div class= "address-<%= full_address.id %>">
-      <% if full_address.default_address %>
-      This is your default address
-      <% end %>
       <%= full_address.nickname %>
       <%= full_address.address %>
       <%= full_address.city %>, <%= full_address.state %> <%= full_address.zip %>
+      <%= link_to 'Edit This Address', edit_profile_addresses_path(@user)%>
     </div>
     <% end %>
   <% end %>
