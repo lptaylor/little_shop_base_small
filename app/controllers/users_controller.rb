@@ -11,6 +11,7 @@ class UsersController < ApplicationController
 
   def create
     @user = User.create(user_params)
+    @user.addresses.first.toggle(:default_address).save
     if @user.save
       session[:user_id] = @user.id
       flash[:success] = 'You are registered and logged in'

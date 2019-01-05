@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(version: 20190103220847) do
     t.string "city"
     t.string "state"
     t.string "zip"
-    t.boolean "default_address", default: true
+    t.boolean "default_address", default: false
     t.boolean "enabled", default: true
     t.boolean "shipping_address", default: false
     t.bigint "user_id"

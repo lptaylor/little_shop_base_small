@@ -6,7 +6,7 @@ RSpec.describe 'Merchant Dashboard page' do
   context 'as a merchant' do
     it 'should show my dashboard information' do
       merchant = create(:merchant)
-      create(:address, user: merchant)
+      create(:address, user: merchant, default_address: true)
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(merchant)
 
       visit dashboard_path
@@ -30,7 +30,7 @@ RSpec.describe 'Merchant Dashboard page' do
       end
       scenario 'when I have orders pending' do
         merchant = create(:merchant)
-        create(:address, user: merchant)
+        create(:address, user: merchant, default_address: true)
         item = create(:item, user: merchant)
         orders = create_list(:order, 2)
         create(:order_item, order: orders[0], item: item, price: 1, quantity: 1)
@@ -55,11 +55,11 @@ RSpec.describe 'Merchant Dashboard page' do
     describe 'when I have orders with items I sell' do
       it 'allows me to fulfill those parts of an order' do
         user = create(:user)
-        create(:address, user: user)
+        create(:address, user: user, default_address: true)
         merchant = create(:merchant)
-        create(:address, user: merchant)
+        create(:address, user: merchant, default_address: true)
         merchant_2 = create(:merchant)
-        create(:address, user: merchant_2)
+        create(:address, user: merchant_2, default_address: true)
         item = create(:item, user: merchant, inventory: 100)
         item_3 = create(:item, user: merchant)
         item_2 = create(:item, user: merchant_2)
@@ -163,13 +163,13 @@ RSpec.describe 'Merchant Dashboard page' do
     describe 'should show some statistics' do
       before :each do
         user_1 = create(:user)
-        create(:address, user: user_1, city: 'Springfield', state: 'MO')
+        create(:address, user: user_1, city: 'Springfield', state: 'MO', default_address: true)
         user_2 = create(:user)
-        create(:address, user: user_2, city: 'Springfield', state: 'CO')
+        create(:address, user: user_2, city: 'Springfield', state: 'CO', default_address: true)
         user_3 = create(:user)
-        create(:address, user: user_3, city: 'Las Vegas', state: 'NV')
+        create(:address, user: user_3, city: 'Las Vegas', state: 'NV', default_address: true)
         user_4 = create(:user)
-        create(:address, user: user_4, city: 'Denver', state: 'CO')
+        create(:address, user: user_4, city: 'Denver', state: 'CO', default_address: true)
 
         merchant = create(:merchant)
         @item_1, @item_2, @item_3, @item_4 = create_list(:item, 4, user: merchant, inventory: 20)

@@ -18,18 +18,18 @@ RSpec.describe User, type: :model do
     describe 'merchant stats' do
       before :each do
         @user_1 = create(:user)
-        create(:address, user: @user_1, city: 'Denver', state: 'CO')
+        create(:address, user: @user_1, city: 'Denver', state: 'CO', default_address: true)
         @user_2 = create(:user)
-        create(:address, user: @user_2, city: 'NYC', state: 'NY')
+        create(:address, user: @user_2, city: 'NYC', state: 'NY', default_address: true)
         @user_3 = create(:user)
-        create(:address, user: @user_3, city: 'Seattle', state: 'WA')
+        create(:address, user: @user_3, city: 'Seattle', state: 'WA', default_address: true)
         @user_4 = create(:user)
-        create(:address, user: @user_4, city: 'Seattle', state: 'FL')
+        create(:address, user: @user_4, city: 'Seattle', state: 'FL', default_address: true)
 
         @merchant_1, @merchant_2, @merchant_3 = create_list(:merchant, 3)
-        create(:address, user: @merchant_1)
-        create(:address, user: @merchant_2)
-        create(:address, user: @merchant_3)
+        create(:address, user: @merchant_1, default_address: true)
+        create(:address, user: @merchant_2, default_address: true)
+        create(:address, user: @merchant_3, default_address: true)
 
         @item_1 = create(:item, user: @merchant_1)
         @item_2 = create(:item, user: @merchant_2)
@@ -112,13 +112,13 @@ RSpec.describe User, type: :model do
     describe 'merchant stats methods' do
       before :each do
         @user_1 = create(:user)
-        create(:address, user: @user_1, city: 'Springfield', state: 'MO')
+        create(:address, user: @user_1, city: 'Springfield', state: 'MO', default_address: true)
         @user_2 = create(:user)
-        create(:address, user: @user_2, city: 'Springfield', state: 'CO')
+        create(:address, user: @user_2, city: 'Springfield', state: 'CO', default_address: true)
         @user_3 = create(:user)
-        create(:address, user: @user_3, city: 'Las Vegas', state: 'NV')
+        create(:address, user: @user_3, city: 'Las Vegas', state: 'NV', default_address: true)
         @user_4 = create(:user)
-        create(:address, user: @user_4, city: 'Denver', state: 'CO')
+        create(:address, user: @user_4, city: 'Denver', state: 'CO', default_address: true)
 
         @merchant = create(:merchant)
         @item_1, @item_2, @item_3, @item_4 = create_list(:item, 4, user: @merchant, inventory: 20)

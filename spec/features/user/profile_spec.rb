@@ -5,7 +5,7 @@ RSpec.describe 'User Profile workflow', type: :feature do
     context 'as the user' do
       it 'shows all profile data and link to edit profile data' do
         user = create(:user)
-        create(:address, user: user)
+        create(:address, user: user, default_address: true)
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
 
         visit profile_path
@@ -26,7 +26,7 @@ RSpec.describe 'User Profile workflow', type: :feature do
     context 'as the user' do
       it 'edits profile data when data is properly entered' do
         user = create(:user, email: 'a@b.com', password: 'password')
-        create(:address, user: user)
+        create(:address, user: user, default_address: true)
         visit login_path
         fill_in :email, with: 'a@b.com'
         fill_in :password, with: 'password'
@@ -76,7 +76,7 @@ RSpec.describe 'User Profile workflow', type: :feature do
       end
       it 'edits profile data when data is properly entered and password is missing' do
         user = create(:user, email: 'a@b.com', password: 'password')
-        create(:address, user: user)
+        create(:address, user: user, default_address: true)
         visit login_path
         fill_in :email, with: 'a@b.com'
         fill_in :password, with: 'password'
@@ -120,9 +120,9 @@ RSpec.describe 'User Profile workflow', type: :feature do
   describe 'blocks profile editing' do
     scenario 'when email is not unique' do
       u_1 = create(:user, email: 'unique@gmail.com')
-      create(:address, user: u_1)
+      create(:address, user: u_1, default_address: true)
       user = create(:user, email: 'ian@gmail.com')
-      create(:address, user: user)
+      create(:address, user: user, default_address: true)
       visit login_path
       fill_in :email, with: 'ian@gmail.com'
       fill_in :password, with: 'password'
