@@ -19,16 +19,16 @@ describe 'As a user' do
     state = "CO 2"
     zip = "80000 2"
 
-    fill_in :addresses_nickname , with: nickname
-    fill_in :addresses_address , with: address
-    fill_in :addresses_city , with: city
-    fill_in :addresses_state , with: state
-    fill_in :addresses_zip , with: zip
+    fill_in :address_nickname , with: nickname
+    fill_in :address_address , with: address
+    fill_in :address_city , with: city
+    fill_in :address_state , with: state
+    fill_in :address_zip , with: zip
 
     click_on 'Create Address'
 
     expect(current_path).to eq(profile_path)
-    within ".address-#{addresses.last.id}" do
+    within ".address-#{@user_1.addresses.last.id}" do
       expect(page).to have_content(nickname)
       expect(page).to have_content(address)
       expect(page).to have_content(city)
@@ -36,4 +36,24 @@ describe 'As a user' do
       expect(page).to have_content(zip)
     end
   end
+
+  it 'it will not save an address with missing information' do
+    click_link 'Add New Address', new_profile_addresses_path(@user_1)
+
+    nickname = "THIS IS A TEST"
+    address = "12345 Main St 2"
+    city = "Denver 2"
+    state = "CO 2"
+
+    fill_in :address_nickname , with: nickname
+    fill_in :address_address , with: address
+    fill_in :address_city , with: city
+    fill_in :address_state , with: state
+
+    click_on 'Create Address'
+
+    expect(current_path).to eq(profile_addresses_path)
+    expect(page).to have_content("Add A New Address")
+  end
+
 end
