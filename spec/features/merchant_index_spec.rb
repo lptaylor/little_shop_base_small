@@ -6,7 +6,6 @@ RSpec.describe 'Merchant Index Page', type: :feature do
     create(:address, user: @merchant)
     @inactive_merchant = create(:inactive_merchant)
     create(:address, user: @inactive_merchant)
-    # binding.pry
   end
   context 'as a non-admin user' do
     it 'should show all active merchants' do
