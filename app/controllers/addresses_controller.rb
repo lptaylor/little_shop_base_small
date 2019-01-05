@@ -1,0 +1,3 @@
+class AddressesController < ApplicationRecord
+
+end

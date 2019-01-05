@@ -16,7 +16,9 @@
   <%= tag.tr id: "merchant-#{merchant.id}" do %>
   <td>
     <% if current_admin? %><%= link_to merchant.name, admin_merchant_path(merchant) %><% else %><%= merchant.name %><% end %>,
-    <%= merchant.city %> <%= merchant.state %></td>
+    <% merchant.addresses.each  do |full_address| %>
+    <%= full_address.city %> <%= full_address.state %></td>
+    <% end %>
   <td>Registered: <%= merchant.created_at %></td>
   <% if current_admin? %>
   <td>

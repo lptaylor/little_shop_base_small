@@ -8,20 +8,20 @@ class Order < ApplicationRecord
   enum status: [:pending, :completed, :cancelled]
 
   def self.top_3_states
-    Order.joins(:user, :order_items)
-      .select('users.state, count(order_items.id) as order_count')
+    Order.joins(:user, :order_items, {user: :addresses})
+      .select('addresses.state, count(order_items.id) as order_count')
       .where("order_items.fulfilled = ?", true)
-      .group('users.state')
-      .order('order_count desc, users.state asc')
+      .group('addresses.state')
+      .order('order_count desc, addresses.state asc')
       .limit(3)
   end
 
   def self.top_3_cities
-    Order.joins(:user, :order_items)
-      .select('users.city, users.state, count(order_items.id) as order_count')
+    Order.joins(:user, :order_items, {user: :addresses})
+      .select('addresses.city, addresses.state, count(order_items.id) as order_count')
       .where("order_items.fulfilled = ?", true)
-      .group('users.state, users.city')
-      .order('order_count desc, users.city asc, users.state asc')
+      .group('addresses.state, addresses.city')
+      .order('order_count desc, addresses.city asc, addresses.state asc')
       .limit(3)
   end
 

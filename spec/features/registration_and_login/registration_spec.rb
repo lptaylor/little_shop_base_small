@@ -5,6 +5,7 @@ RSpec.describe 'Registration Workflow', type: :feature do
     visit registration_path
     email = "email@gmail.com"
     name = "Ian Douglas"
+    nickname = "nickname 1"
     address = "123 Main St"
     city = "Denver"
     state = "CO"
@@ -14,10 +15,11 @@ RSpec.describe 'Registration Workflow', type: :feature do
     fill_in :user_password,	with: "password"
     fill_in :user_password_confirmation,	with: "password"
     fill_in :user_name,	with: name
-    fill_in :user_address,	with: address
-    fill_in :user_city,	with: city
-    fill_in :user_state,	with: state
-    fill_in :user_zip,	with: zip
+    fill_in :user_addresses_attributes_0_nickname,	with: nickname
+    fill_in :user_addresses_attributes_0_address,	with: address
+    fill_in :user_addresses_attributes_0_city,	with: city
+    fill_in :user_addresses_attributes_0_state,	with: state
+    fill_in :user_addresses_attributes_0_zip,	with: zip
     click_button 'Create User'
 
     expect(current_path).to eq(profile_path)
@@ -28,15 +30,14 @@ RSpec.describe 'Registration Workflow', type: :feature do
       visit registration_path
 
       click_button 'Create User'
-
       expect(current_path).to eq(users_path)
       expect(page).to have_content("Email can't be blank")
       expect(page).to have_content("Password can't be blank")
       expect(page).to have_content("Name can't be blank")
-      expect(page).to have_content("Address can't be blank")
-      expect(page).to have_content("City can't be blank")
-      expect(page).to have_content("State can't be blank")
-      expect(page).to have_content("Zip can't be blank")
+      expect(page).to have_content("Addresses address can't be blank")
+      expect(page).to have_content("Addresses city can't be blank")
+      expect(page).to have_content("Addresses state can't be blank")
+      expect(page).to have_content("Addresses zip can't be blank")
     end
     scenario 'when password confirmation is wrong' do
       visit registration_path
@@ -47,15 +48,17 @@ RSpec.describe 'Registration Workflow', type: :feature do
       city = "Denver"
       state = "CO"
       zip = "80000"
+      nickname = "nickname 1"
 
       fill_in :user_email,	with: email
       fill_in :user_password,	with: "password"
       fill_in :user_password_confirmation,	with: "different_password"
       fill_in :user_name,	with: name
-      fill_in :user_address,	with: address
-      fill_in :user_city,	with: city
-      fill_in :user_state,	with: state
-      fill_in :user_zip,	with: zip
+      fill_in :user_addresses_attributes_0_nickname,	with: nickname
+      fill_in :user_addresses_attributes_0_address,	with: address
+      fill_in :user_addresses_attributes_0_city,	with: city
+      fill_in :user_addresses_attributes_0_state,	with: state
+      fill_in :user_addresses_attributes_0_zip,	with: zip
       click_button 'Create User'
 
       expect(current_path).to eq(users_path)
