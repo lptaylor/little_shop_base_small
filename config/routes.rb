@@ -35,6 +35,7 @@ Rails.application.routes.draw do
     resource :addresses, only: [:new, :create, :update, :edit] do
       member do
         post '/toggle_active', to: 'addresses#toggle_active_address', as: 'toggle_active'
+        post '/toggle_default_address', to: 'addresses#toggle_default_address', as: 'toggle_default'
       end
     end
   end

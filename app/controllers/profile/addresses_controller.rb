@@ -35,6 +35,14 @@ class Profile::AddressesController < ApplicationController
     redirect_to profile_path(current_user)
   end
 
+  def toggle_default_address
+    @existing_default = Address.find_by(default_address: true)
+    @existing_default.toggle(:default_address).save
+    @address = Address.find(params[:format])
+    @address.toggle(:default_address).save
+    redirect_to profile_path(current_user)
+  end
+
 end
 private
 

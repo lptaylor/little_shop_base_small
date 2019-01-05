@@ -2,7 +2,7 @@
 <%= tag.div class: 'profile' do %>
   <p><%= @user.email %></p>
   <%= tag.div id: 'address' do %>
-    <div class="default_address">
+    <div class="default-address">
       This is your default address
       <%= @user.primary_address.nickname %>
       <%= @user.primary_address.address %>
@@ -14,7 +14,7 @@
       <%= button_to "Enable This Address", toggle_active_profile_addresses_path(@user.primary_address) %>
       <% end %>
     </div>
-    <% @user.addresses.each do |full_address| %>
+    <% @user.non_primary_addresses.each do |full_address| %>
     <div class= "address-<%= full_address.id %>">
       <%= full_address.nickname %>
       <%= full_address.address %>
@@ -25,6 +25,7 @@
       <% else %>
       <%= button_to "Enable This Address", toggle_active_profile_addresses_path(full_address) %>
       <% end %>
+      <%= button_to "Make This My Default Address", toggle_default_profile_addresses_path(full_address) %>
     </div>
     <% end %>
   <% end %>

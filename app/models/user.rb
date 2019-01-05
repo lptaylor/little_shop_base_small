@@ -18,7 +18,7 @@ class User < ApplicationRecord
   end
 
   def non_primary_addresses
-    addresses.find_by(default_address: false)
+    addresses.where(default_address: false)
   end
 
   def self.top_3_revenue_merchants
@@ -80,7 +80,7 @@ class User < ApplicationRecord
   def top_3_states
     Item.joins('inner join order_items oi on oi.item_id=items.id inner join orders o on o.id=oi.order_id inner join users u on o.user_id=u.id inner join addresses a on a.user_id=u.id')
       .select('a.state, sum(oi.quantity) as quantity_shipped')
-      .where("oi.fulfilled = ? AND items.merchant_id=?", true, self.id)
+      .where("oi.fulfilled = ? AND items.merchant_id=? AND a.shipping_address=?",  true, self.id, true)
       .group(:state)
       .order('quantity_shipped desc')
       .limit(3)
@@ -89,7 +89,7 @@ class User < ApplicationRecord
   def top_3_cities
     Item.joins('inner join order_items oi on oi.item_id=items.id inner join orders o on o.id=oi.order_id inner join users u on o.user_id=u.id inner join addresses a on a.user_id=u.id')
       .select('a.city, a.state, sum(oi.quantity) as quantity_shipped')
-      .where("oi.fulfilled = ? AND items.merchant_id=?", true, self.id)
+      .where("oi.fulfilled = ? AND items.merchant_id=? AND a.shipping_address=?", true, self.id, true)
       .group(:state, :city)
       .order('quantity_shipped desc')
       .limit(3)
