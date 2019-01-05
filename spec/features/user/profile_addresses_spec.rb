@@ -3,9 +3,9 @@ require 'rails_helper'
 describe 'As a user' do
   before(:each) do
     @user_1 = create(:user)
-    create(:address, user: @user_1, default_address: true)
-    create(:address, user: @user_1, default_address: false, enabled: false)
-    create(:address, user: @user_1, default_address: false)
+    @address_1 = create(:address, user: @user_1, default_address: true)
+    @address_2 = create(:address, user: @user_1, default_address: false, enabled: false)
+    @address_3 = create(:address, user: @user_1, default_address: false)
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user_1)
     visit profile_path(@user_1)
   end
@@ -105,9 +105,22 @@ describe 'As a user' do
       expect(page).to have_content("Nickname can't be blank")
   end
 
-  xit "will allow user to enable or disable" do
-
+  it "will allow user to enable or disable" do
+    within ".address-#{@address_2.id}" do
+      expect(page).to have_button("Enable This Address")
+      click_button "Enable This Address"
+      expect(current_path).to eq(profile_path(@user_1))
+      expect(@address_2.reload.enabled).to be true
+    end
+    within ".address-#{@address_3.id}" do
+      expect(page).to have_button("Disable This Address")
+      click_button "Disable This Address"
+      expect(current_path).to eq(profile_path(@user_1))
+      expect(@address_3.reload.enabled).to be false
+    end
   end
+
+
 
 
 end

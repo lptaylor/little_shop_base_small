@@ -21,16 +21,21 @@ class Profile::AddressesController < ApplicationController
   def update
     @address = Address.find(params[:format])
     @address.update(address_params)
-    if @address.save
-      flash[:success] = "Address has been updated"
-      redirect_to profile_path(current_user)
-    else
-      render :edit
-    end
+      if @address.save
+        flash[:success] = "Address has been updated"
+        redirect_to profile_path(current_user)
+      else
+        render :edit
+      end
   end
+
+  def toggle_active_address
+    @address = Address.find(params[:format])
+    @address.toggle(:enabled).save
+    redirect_to profile_path(current_user)
+  end
+
 end
-
-
 private
 
 def address_params

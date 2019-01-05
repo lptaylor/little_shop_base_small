@@ -32,7 +32,11 @@ Rails.application.routes.draw do
   get '/profile/edit', to: 'users#edit'
   namespace :profile do
     resources :orders, only: [:index, :create, :show, :destroy]
-    resource :addresses, only: [:new, :create, :update, :edit]
+    resource :addresses, only: [:new, :create, :update, :edit] do
+      member do
+        post '/toggle_active', to: 'addresses#toggle_active_address', as: 'toggle_active'
+      end
+    end
   end
 
   post '/admin/users/:merchant_id/items', to: 'dashboard/items#create', as: 'admin_user_items'

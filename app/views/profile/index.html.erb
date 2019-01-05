@@ -8,6 +8,11 @@
       <%= @user.primary_address.address %>
       <%= @user.primary_address.city %>, <%= @user.primary_address.state %> <%= @user.primary_address.zip %>
       <%= link_to 'Edit This Address', edit_profile_addresses_path(@user.primary_address)%>
+      <% if @user.primary_address.enabled %>
+      <%= button_to "Disable This Address", toggle_active_profile_addresses_path(@user.primary_address)%>
+      <% else %>
+      <%= button_to "Enable This Address", toggle_active_profile_addresses_path(@user.primary_address) %>
+      <% end %>
     </div>
     <% @user.addresses.each do |full_address| %>
     <div class= "address-<%= full_address.id %>">
@@ -15,6 +20,11 @@
       <%= full_address.address %>
       <%= full_address.city %>, <%= full_address.state %> <%= full_address.zip %>
       <%= link_to 'Edit This Address', edit_profile_addresses_path(full_address)%>
+      <% if full_address.enabled %>
+      <%= button_to "Disable This Address", toggle_active_profile_addresses_path(full_address) %>
+      <% else %>
+      <%= button_to "Enable This Address", toggle_active_profile_addresses_path(full_address) %>
+      <% end %>
     </div>
     <% end %>
   <% end %>
