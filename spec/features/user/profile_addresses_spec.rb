@@ -57,7 +57,7 @@ describe 'As a user' do
   end
 
   it 'will allow user to update address' do
-    within '.default_address' do
+    within '.default-address' do
       click_link 'Edit This Address', edit_profile_addresses_path(@user_1)
     end
     nickname = "THIS IS A TEST"
@@ -75,7 +75,7 @@ describe 'As a user' do
       click_on 'Update Address'
 
       expect(current_path).to eq(profile_path(@user_1))
-      within '.default_address' do
+      within '.default-address' do
         expect(page).to have_content(nickname)
         expect(page).to have_content(address)
         expect(page).to have_content(city)
@@ -85,7 +85,7 @@ describe 'As a user' do
   end
 
   it 'will not allow user to update address if details are empty' do
-    within '.default_address' do
+    within '.default-address' do
       click_link 'Edit This Address', profile_addresses_path(@user_1)
     end
     nickname = ""
@@ -120,6 +120,27 @@ describe 'As a user' do
     end
   end
 
+  it "allows user to set a different default address and removes previous one" do
+    within ".address-#{@address_3.id}" do
+      expect(page).to have_button("Make This My Default Address")
+      click_button "Make This My Default Address"
+      expect(current_path).to eq(profile_path(@user_1))
+    end
+
+    within ".default-address" do
+      expect(@address_3.reload.default_address).to be true
+      expect(page).to have_content(@address_3.nickname)
+      expect(page).to have_content(@address_3.address)
+      expect(page).to have_content(@address_3.city)
+      expect(page).to have_content(@address_3.state)
+      expect(page).to have_content(@address_3.zip)
+      expect(page).to_not have_content(@address_1.nickname)
+      expect(page).to_not have_content(@address_1.address)
+      expect(page).to_not have_content(@address_1.city)
+      expect(page).to_not have_content(@address_1.state)
+      expect(page).to_not have_content(@address_1.zip)
+    end
+  end
 
 
 
