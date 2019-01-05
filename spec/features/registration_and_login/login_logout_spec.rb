@@ -71,7 +71,7 @@ RSpec.describe 'Login/Logout workflow', type: :feature do
       expect(page).to have_content('Email or password is incorrect')
     end
     it 'should fail if my account is disabled' do
-      user_1 = create(:user, email:'a@b.com', password: 'password')
+      user_1 = create(:user, email:'a@b.com', password: 'password', active: false)
       create(:address, user: user_1)
 
       visit login_path
