@@ -57,21 +57,57 @@ describe 'As a user' do
   end
 
   it 'will allow user to update address' do
-    click_link 'Edit This Address', edit_profile_addresses_path(@user_1)
-
+    within '.default_address' do
+      click_link 'Edit This Address', edit_profile_addresses_path(@user_1)
+    end
     nickname = "THIS IS A TEST"
     address = "12345 Main St 2"
     city = "Denver 2"
     state = "CO 2"
     zip = "80000 2"
 
-    fill_in :address_nickname , with: nickname
-    fill_in :address_address , with: address
-    fill_in :address_city , with: city
-    fill_in :address_state , with: state
-    fill_in :address_zip , with: zip
+      fill_in :address_nickname , with: nickname
+      fill_in :address_address , with: address
+      fill_in :address_city , with: city
+      fill_in :address_state , with: state
+      fill_in :address_zip , with: zip
 
-    click_on 'Edit Address'
+      click_on 'Update Address'
+
+      expect(current_path).to eq(profile_path(@user_1))
+      within '.default_address' do
+        expect(page).to have_content(nickname)
+        expect(page).to have_content(address)
+        expect(page).to have_content(city)
+        expect(page).to have_content(state)
+        expect(page).to have_content(zip)
+      end
   end
+
+  it 'will not allow user to update address if details are empty' do
+    within '.default_address' do
+      click_link 'Edit This Address', profile_addresses_path(@user_1)
+    end
+    nickname = ""
+    address = "12345 Main St 2"
+    city = "Denver 2"
+    state = "CO 2"
+    zip = "80000 2"
+
+      fill_in :address_nickname , with: nickname
+      fill_in :address_address , with: address
+      fill_in :address_city , with: city
+      fill_in :address_state , with: state
+      fill_in :address_zip , with: zip
+
+      click_on 'Update Address'
+
+      expect(page).to have_content("Nickname can't be blank")
+  end
+
+  xit "will allow user to enable or disable" do
+
+  end
+
 
 end
