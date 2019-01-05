@@ -25,6 +25,31 @@ RSpec.describe 'Registration Workflow', type: :feature do
     expect(current_path).to eq(profile_path)
     expect(page).to have_content('You are registered and logged in')
   end
+  it 'makes the first address a visitor registers with as a default address ' do
+    visit registration_path
+    email = "email@gmail.com"
+    name = "Ian Douglas"
+    nickname = "nickname 1"
+    address = "123 Main St"
+    city = "Denver"
+    state = "CO"
+    zip = "80000"
+
+    fill_in :user_email,	with: email
+    fill_in :user_password,	with: "password"
+    fill_in :user_password_confirmation,	with: "password"
+    fill_in :user_name,	with: name
+    fill_in :user_addresses_attributes_0_nickname,	with: nickname
+    fill_in :user_addresses_attributes_0_address,	with: address
+    fill_in :user_addresses_attributes_0_city,	with: city
+    fill_in :user_addresses_attributes_0_state,	with: state
+    fill_in :user_addresses_attributes_0_zip,	with: zip
+    click_button 'Create User'
+
+    expect(current_path).to eq(profile_path)
+    expect(page).to have_content('You are registered and logged in')
+    expect(page).to have_content("This is your default address")
+  end
   describe 'blocks a visitor from registering' do
     scenario 'when details are missing' do
       visit registration_path

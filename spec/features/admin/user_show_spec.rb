@@ -5,7 +5,7 @@ RSpec.describe 'Admin User Show workflow', type: :feature do
     before :each do
       admin = create(:admin)
       @user_1 = create(:user)
-      create(:address, user: @user_1)
+      create(:address, user: @user_1, default_address: true)
 
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
     end

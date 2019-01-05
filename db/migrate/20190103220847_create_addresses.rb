@@ -6,7 +6,7 @@ class CreateAddresses < ActiveRecord::Migration[5.1]
       t.string :city
       t.string :state
       t.string :zip
-      t.boolean :default_address, default: true
+      t.boolean :default_address, default: false
       t.boolean :enabled , default: true
       t.boolean :shipping_address, default: false
       t.references :user, foreign_key: true

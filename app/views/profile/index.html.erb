@@ -3,9 +3,14 @@
   <p><%= @user.email %></p>
   <%= tag.div id: 'address' do %>
     <% @user.addresses.each do |full_address| %>
+    <div class= "address-<%= full_address.id %>">
+      <% if full_address.default_address %>
+      This is your default address
+      <% end %>
       <%= full_address.nickname %>
       <%= full_address.address %>
       <%= full_address.city %>, <%= full_address.state %> <%= full_address.zip %>
+    </div>
     <% end %>
   <% end %>
 

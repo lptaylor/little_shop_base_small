@@ -5,7 +5,7 @@ RSpec.describe 'Login/Logout workflow', type: :feature do
     describe 'should complete successfully with correct credentials' do
       scenario 'regular users go to profile page' do
         user_1 = create(:user, email:'a@b.com', password: 'password')
-        create(:address, user: user_1)
+        create(:address, user: user_1, default_address: true)
 
         visit login_path
         expect(page).to have_link('Log in')
@@ -24,7 +24,7 @@ RSpec.describe 'Login/Logout workflow', type: :feature do
       end
       scenario 'merchant users go to dashboard page' do
         merch_1 = create(:merchant, email:'a@b.com', password: 'password')
-        create(:address, user: merch_1)
+        create(:address, user: merch_1, default_address: true)
 
         visit login_path
 
@@ -41,7 +41,7 @@ RSpec.describe 'Login/Logout workflow', type: :feature do
       end
       scenario 'regular users go to profile page' do
         admin_1 = create(:admin, email:'a@b.com', password: 'password')
-        create(:address, user: admin_1)
+        create(:address, user: admin_1, default_address: true)
 
         visit login_path
 
@@ -59,7 +59,7 @@ RSpec.describe 'Login/Logout workflow', type: :feature do
     end
     it 'should fail if credentials are wrong' do
       user_1 = create(:user, email:'a@b.com', password: 'password')
-      create(:address, user: user_1)
+      create(:address, user: user_1, default_address: true)
 
       visit login_path
 
@@ -72,7 +72,7 @@ RSpec.describe 'Login/Logout workflow', type: :feature do
     end
     it 'should fail if my account is disabled' do
       user_1 = create(:user, email:'a@b.com', password: 'password', active: false)
-      create(:address, user: user_1)
+      create(:address, user: user_1, default_address: true)
 
       visit login_path
 
@@ -87,7 +87,7 @@ RSpec.describe 'Login/Logout workflow', type: :feature do
   describe 'logging out' do
     it 'works correctly' do
       user_1 = create(:user, email:'a@b.com', password: 'password')
-      create(:address, user: user_1)
+      create(:address, user: user_1, default_address: true)
 
       visit login_path
 
@@ -102,7 +102,7 @@ RSpec.describe 'Login/Logout workflow', type: :feature do
     end
     it 'empties my shopping cart when logging out' do
       user_1 = create(:user, email:'a@b.com', password: 'password')
-      create(:address, user: user_1)
+      create(:address, user: user_1, default_address: true)
 
       item_1 = create(:item)
 
