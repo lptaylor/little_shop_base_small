@@ -67,7 +67,7 @@ describe 'As a user' do
       create(:address, user: user_1, enabled: false, default_address: false, shipping_address: false)
 
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user_1)
-      binding.pry
+      
       visit item_path(item)
       click_button "Add to Cart"
       visit cart_path

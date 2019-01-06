@@ -6,6 +6,9 @@ describe 'As a user' do
     @address_1 = create(:address, user: @user_1, default_address: true)
     @address_2 = create(:address, user: @user_1, default_address: false, enabled: false, shipping_address: false)
     @address_3 = create(:address, user: @user_1, default_address: false, shipping_address: false)
+    @order_1 = create(:order, shipping_address: @address_2.id, status: 0, user_id: @user_1.id)
+    @order_2 = create(:order, shipping_address: @address_1.id, status: 2, user_id: @user_1.id)
+    @order_3 = create(:order, shipping_address: @address_1.id, status: 1, user_id: @user_1.id)
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user_1)
     visit profile_path(@user_1)
   end
@@ -142,4 +145,17 @@ describe 'As a user' do
     end
   end
 
+  it 'allows user to change address for order so long as it is just pending' do
+    visit profile_order_path(@order_2)
+    expect(page).to_not have_button("Change Shipping Address")
+    visit profile_path(@user_1)
+    visit profile_order_path(@order_3)
+    expect(page).to_not have_button("Change Shipping Address")
+    visit profile_path(@user_1)
+    visit profile_order_path(@order_1)
+    within ".order-address-#{@address_3.id}" do
+      expect(page).to have_button("Change Shipping Address")
+      click_button "Change Shipping Address"
+    end
+  end
 end

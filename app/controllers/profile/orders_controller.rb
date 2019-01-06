@@ -48,9 +48,19 @@ class Profile::OrdersController < ApplicationController
     end
   end
 
+  def update
+    @order = Order.find(params[:id])
+    @order.update(order_params)
+    redirect_to profile_order_path(@order)
+  end
+
   private
 
   def require_default_user
     render file: 'errors/not_found', status: 404 unless current_user && current_user.default?
+  end
+
+  def order_params
+    params.permit(:shipping_address)
   end
 end
