@@ -36,6 +36,7 @@ Rails.application.routes.draw do
       member do
         post '/toggle_active', to: 'addresses#toggle_active_address', as: 'toggle_active'
         post '/toggle_default_address', to: 'addresses#toggle_default_address', as: 'toggle_default'
+        post '/toggle_shipping_address', to: 'addresses#toggle_shipping_address', as: 'toggle_shipping'
       end
     end
   end

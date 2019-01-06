@@ -4,8 +4,8 @@ describe 'As a user' do
   before(:each) do
     @user_1 = create(:user)
     @address_1 = create(:address, user: @user_1, default_address: true)
-    @address_2 = create(:address, user: @user_1, default_address: false, enabled: false)
-    @address_3 = create(:address, user: @user_1, default_address: false)
+    @address_2 = create(:address, user: @user_1, default_address: false, enabled: false, shipping_address: false)
+    @address_3 = create(:address, user: @user_1, default_address: false, shipping_address: false)
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user_1)
     visit profile_path(@user_1)
   end
@@ -141,7 +141,5 @@ describe 'As a user' do
       expect(page).to_not have_content(@address_1.zip)
     end
   end
-
-
 
 end

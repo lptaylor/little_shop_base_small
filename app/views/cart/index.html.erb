@@ -5,8 +5,23 @@
 
   <%= button_to "Empty cart", cart_empty_path, method: :delete %>
 
-  <% if current_user %>
+  <% if current_user && current_user.any_active_addresses? %>
+  <div class="default-address">
+    <h3>Default Address: <%= current_user.primary_address.nickname %></h3>
+    <h4>Street Address: <%= current_user.primary_address.address %></h4>
+    <h4>City, State Zip:<%= current_user.primary_address.city %>,<%= current_user.primary_address.state %><%= current_user.primary_address.zip %></h4>
+    <%= button_to "Make This My Shipping Address", toggle_shipping_profile_addresses_path(current_user) %>
+  </div>
+  <div class="secondary-addresses">
+    <% current_user.non_primary_addresses_active.each do |full_address| %>
+    <h3>Default Address: <%= full_address.nickname %></h3>
+    <h4>Street Address: <%= full_address.address %></h4>
+    <h4>City, State Zip:<%= full_address.city %>,<%= full_address.state %><%= full_address.zip %></h4>
+    <%= button_to "Make This My Shipping Address", toggle_shipping_profile_addresses_path(current_user) %>
+    <% end %>
+  </div>
     <%= button_to 'Check out', profile_orders_path %>
+
   <% else %>
     You must
     <%= link_to 'register', registration_path %>

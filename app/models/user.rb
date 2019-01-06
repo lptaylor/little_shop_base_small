@@ -13,12 +13,21 @@ class User < ApplicationRecord
 
   enum role: [:default, :merchant, :admin]
 
+  def any_active_addresses?
+    true if addresses.where(enabled: true).count >= 0
+  end
+
   def primary_address
     addresses.find_by(default_address: true)
   end
 
   def non_primary_addresses
     addresses.where(default_address: false)
+  end
+
+  def non_primary_addresses_active
+    addresses.where(default_address: false)
+    .where(enabled: true)
   end
 
   def self.top_3_revenue_merchants

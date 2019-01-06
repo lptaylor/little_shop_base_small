@@ -1,4 +1,5 @@
 class Profile::AddressesController < ApplicationController
+  # before_save :set_default
 
   def new
     @address = Address.new
@@ -43,9 +44,23 @@ class Profile::AddressesController < ApplicationController
     redirect_to profile_path(current_user)
   end
 
+  def toggle_shipping_address
+    @address = Address.find(params[:format])
+    @address.toggle(:shipping_address).save
+    redirect_to cart_path
+  end
+
 end
 private
 
 def address_params
   params.require(:address).permit(:nickname, :address, :city, :state, :zip)
 end
+
+# def set_default_addresss
+#   Address.where.not(id: id).update_all(default_address: false)
+# end
+#
+# def set_shipping_addresss
+#   Address.where.not(id: id).update_all(shipping_address: false)
+# end
