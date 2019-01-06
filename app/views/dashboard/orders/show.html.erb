@@ -3,10 +3,8 @@
 <%= tag.div id: 'user-details' do %>
   <p>Name: <%= @order.user.name %></p>
   <p>Shipping Address:<br/>
-  <% @order.user.addresses.each do |full_address| %>
-  <%= full_address.address %>
-  <%= full_address.city %>, <%= full_address.state %> <%= full_address.zip %>
-  <% end %>
+  <%= @order.shipping_address_details(@order.shipping_address).address %>
+  <%= @order.shipping_address_details(@order.shipping_address).city %>, <%= @order.shipping_address_details(@order.shipping_address).state %> <%= @order.shipping_address_details(@order.shipping_address).zip %>
 <% end %>
 
 <%= tag.div id: 'order-details' do %>

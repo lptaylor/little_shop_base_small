@@ -29,10 +29,12 @@ RSpec.describe 'Merchant Dashboard page' do
         end
       end
       scenario 'when I have orders pending' do
+        user = create(:user)
+        create(:address, user: user)
         merchant = create(:merchant)
         create(:address, user: merchant, default_address: true)
         item = create(:item, user: merchant)
-        orders = create_list(:order, 2)
+        orders = create_list(:order, 2, shipping_address: user.primary_address.id)
         create(:order_item, order: orders[0], item: item, price: 1, quantity: 1)
         create(:order_item, order: orders[1], item: item, price: 1, quantity: 1)
 
@@ -63,7 +65,7 @@ RSpec.describe 'Merchant Dashboard page' do
         item = create(:item, user: merchant, inventory: 100)
         item_3 = create(:item, user: merchant)
         item_2 = create(:item, user: merchant_2)
-        order = create(:order, user: user)
+        order = create(:order, user: user, shipping_address: user.primary_address.id)
         create(:order_item, order: order, item: item, price: 1, quantity: 10)
         create(:order_item, order: order, item: item_2, price: 1, quantity: 1)
         create(:fulfilled_order_item, order: order, item: item_3, price: 1, quantity: 1)
@@ -114,11 +116,11 @@ RSpec.describe 'Merchant Dashboard page' do
       end
       it 'blocks me from fulfilling an order if I lack inventory' do
         user = create(:user)
+        create(:address, user: user)
         merchant = create(:merchant)
         item = create(:item, user: merchant, inventory: 10)
-        order = create(:order, user: user)
+        order = create(:order, user: user, shipping_address: user.primary_address.id)
         create(:order_item, order: order, item: item, price: 1, quantity: 11)
-
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(merchant)
 
         visit dashboard_order_path(order)
@@ -130,13 +132,14 @@ RSpec.describe 'Merchant Dashboard page' do
       end
       it 'sets order as complete if I am the last merchant to fulfill items' do
         user = create(:user)
+        create(:address, user: user)
         merchant = create(:merchant)
         merchant_2 = create(:merchant)
         item_1 = create(:item, user: merchant, inventory: 100)
         item_3 = create(:item, user: merchant)
         item_2 = create(:item, user: merchant_2)
-        order_1 = create(:order, user: user)
-        order_2 = create(:order, user: user)
+        order_1 = create(:order, user: user, shipping_address: user.primary_address.id)
+        order_2 = create(:order, user: user, shipping_address: user.primary_address.id)
         create(:order_item, order: order_1, item: item_1, price: 1, quantity: 10)
         create(:fulfilled_order_item, order: order_1, item: item_2, price: 1, quantity: 1)
         create(:order_item, order: order_2, item: item_3, price: 1, quantity: 1)

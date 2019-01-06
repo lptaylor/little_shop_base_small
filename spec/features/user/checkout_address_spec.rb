@@ -5,7 +5,7 @@ describe 'As a user' do
     @merchant = create(:merchant)
     @item = create(:item, user: @merchant)
     @user_1 = create(:user)
-    @address_1 = create(:address, user: @user_1, default_address: true)
+    @address_1 = create(:address, user: @user_1, default_address: true, shipping_address: true)
     @address_2 = create(:address, user: @user_1, default_address: false, enabled: false, shipping_address: false)
     @address_3 = create(:address, user: @user_1, default_address: false, shipping_address: false)
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user_1)
@@ -25,7 +25,7 @@ describe 'As a user' do
       expect(page).to have_content(@address_1.zip)
     end
 
-    within '.secondary-addresses' do
+    within ".secondary-addresses-#{@address_3.id}" do
       expect(page).to have_content(@address_3.nickname)
       expect(page).to have_content(@address_3.address)
       expect(page).to have_content(@address_3.city)
@@ -43,5 +43,21 @@ describe 'As a user' do
       expect(page).to_not have_content(@address_2.zip)
     end
   end
+  
+  it "allows user to change shipping_address" do
+    within '.default-address' do
+      expect(page).to_not have_button("Make This My Shipping Address")
+    end
+    within ".secondary-addresses-#{@address_3.id}" do
+      expect(page).to have_button("Make This My Shipping Address")
+      expect(@address_3.reload.shipping_address).to be false
+
+      click_button "Make This My Shipping Address"
+    end
+    expect(@address_3.reload.shipping_address).to be true
+    expect(@address_1.reload.shipping_address).to be false
+  end
+
+
 
 end

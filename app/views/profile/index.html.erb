@@ -3,29 +3,31 @@
   <p><%= @user.email %></p>
   <%= tag.div id: 'address' do %>
     <div class="default-address">
-      This is your default address
-      <%= @user.primary_address.nickname %>
-      <%= @user.primary_address.address %>
-      <%= @user.primary_address.city %>, <%= @user.primary_address.state %> <%= @user.primary_address.zip %>
-      <%= link_to 'Edit This Address', edit_profile_addresses_path(@user.primary_address)%>
+      <h2>This is your default address</h2>
+      <p><%= @user.primary_address.nickname %> </p>
+      <p><%= @user.primary_address.address %> </p>
+      <p><%= @user.primary_address.city %>, <%= @user.primary_address.state %> <%= @user.primary_address.zip %> </p>
+      <p><%= link_to 'Edit This Address', edit_profile_addresses_path(@user.primary_address)%> </p>
       <% if @user.primary_address.enabled %>
-      <%= button_to "Disable This Address", toggle_active_profile_addresses_path(@user.primary_address)%>
+      <p><%= button_to "Disable This Address", toggle_active_profile_addresses_path(@user.primary_address)%> </p>
       <% else %>
-      <%= button_to "Enable This Address", toggle_active_profile_addresses_path(@user.primary_address) %>
+      <p><%= button_to "Enable This Address", toggle_active_profile_addresses_path(@user.primary_address) %> </p>
       <% end %>
+      <br>
     </div>
     <% @user.non_primary_addresses.each do |full_address| %>
     <div class= "address-<%= full_address.id %>">
-      <%= full_address.nickname %>
-      <%= full_address.address %>
-      <%= full_address.city %>, <%= full_address.state %> <%= full_address.zip %>
-      <%= link_to 'Edit This Address', edit_profile_addresses_path(full_address)%>
+      <p><%= full_address.nickname %> </p>
+      <p><%= full_address.address %> </p>
+      <p><%= full_address.city %>, <%= full_address.state %> <%= full_address.zip %></p>
+      <p><%= link_to 'Edit This Address', edit_profile_addresses_path(full_address)%></p>
       <% if full_address.enabled %>
-      <%= button_to "Disable This Address", toggle_active_profile_addresses_path(full_address) %>
+      <p><%= button_to "Disable This Address", toggle_active_profile_addresses_path(full_address) %></p>
       <% else %>
-      <%= button_to "Enable This Address", toggle_active_profile_addresses_path(full_address) %>
+      <p><%= button_to "Enable This Address", toggle_active_profile_addresses_path(full_address) %></p>
       <% end %>
-      <%= button_to "Make This My Default Address", toggle_default_profile_addresses_path(full_address) %>
+      <p><%= button_to "Make This My Default Address", toggle_default_profile_addresses_path(full_address) %></p>
+      <br>
     </div>
     <% end %>
   <% end %>

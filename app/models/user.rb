@@ -4,14 +4,20 @@ class User < ApplicationRecord
   has_many :items, foreign_key: 'merchant_id'
   has_many :orders
   has_many :order_items, through: :orders
-  has_many :addresses
+  has_many :addresses, :dependent => :destroy
+
   accepts_nested_attributes_for :addresses
+
 
   validates_presence_of :name
   validates :email, presence: true, uniqueness: true
 
 
   enum role: [:default, :merchant, :admin]
+
+  def shipping_address
+    addresses.find_by(shipping_address: true)
+  end
 
   def any_active_addresses?
     true if addresses.where(enabled: true).count >= 0

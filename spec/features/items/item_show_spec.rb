@@ -9,7 +9,8 @@ RSpec.describe 'Item show page', type: :feature do
     @item = create(:item, user: @merchant)
     @item_2 = create(:item, user: @merchant, inventory: 0)
     @user = create(:user)
-    @order = create(:completed_order, user: @user)
+    create(:address, user: @user)
+    @order = create(:completed_order, user: @user, shipping_address: @user.primary_address.id)
     create(:fulfilled_order_item, order: @order, item: @item, created_at: 4.days.ago, updated_at: 3.days.ago)
     create(:fulfilled_order_item, order: @order, item: @item, created_at: 1.hour.ago, updated_at: 30.minutes.ago)
   end

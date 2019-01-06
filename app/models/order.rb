@@ -7,6 +7,10 @@ class Order < ApplicationRecord
 
   enum status: [:pending, :completed, :cancelled]
 
+  def shipping_address_details(shipping_address)
+    user.addresses.find_by("addresses.id=?", shipping_address)
+  end
+
   def self.top_3_states
     Order.joins(:user, :order_items, {user: :addresses})
       .select('addresses.state, count(order_items.id) as order_count')
