@@ -49,9 +49,11 @@ class Profile::OrdersController < ApplicationController
   end
 
   def update
+    binding.pry
     @order = Order.find(params[:id])
-    @order.update(order_params)
+    @order.update(shipping_address: order_params[:format])
     redirect_to profile_order_path(@order)
+    binding.pry
   end
 
   private
@@ -61,6 +63,6 @@ class Profile::OrdersController < ApplicationController
   end
 
   def order_params
-    params.permit(:shipping_address)
+    params.permit(:format)
   end
 end

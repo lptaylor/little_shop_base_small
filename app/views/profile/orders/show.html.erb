@@ -13,7 +13,7 @@
     <% if full_address.shipping_address %>
     <h3>This is your shipping_address for this order.</h3>
     <% else %>
-    <p><%= button_to 'Change Shipping Address', profile_order_path(@order), method: :patch %></p>
+    <p><%= button_to 'Change Shipping Address', profile_order_path(@order, full_address), method: :patch %></p>
     <% end %>
   </div>
   <% end %>

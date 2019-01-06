@@ -154,8 +154,11 @@ describe 'As a user' do
     visit profile_path(@user_1)
     visit profile_order_path(@order_1)
     within ".order-address-#{@address_3.id}" do
+      expect(@address_3.reload.shipping_address).to be false
       expect(page).to have_button("Change Shipping Address")
       click_button "Change Shipping Address"
+      expect(@address_3.reload.shipping_address).to be true
+      expect(page).to_not have_button("Change Shipping Address")
     end
   end
 end
