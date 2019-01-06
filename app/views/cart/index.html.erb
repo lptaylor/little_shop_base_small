@@ -29,6 +29,8 @@
       <% end %>
     </div>
       <%= button_to 'Check out', profile_orders_path %>
+  <% elsif current_user && !current_user.any_active_addresses?%>
+    <h1>"You Must Enable an Address at Your Profile to Checkout"</h1>
   <% else %>
     You must
     <%= link_to 'register', registration_path %>

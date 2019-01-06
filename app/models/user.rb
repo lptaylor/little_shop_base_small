@@ -20,7 +20,7 @@ class User < ApplicationRecord
   end
 
   def any_active_addresses?
-    true if addresses.where(enabled: true).count >= 0
+    true if addresses.where(enabled: true).count > 0
   end
 
   def primary_address
