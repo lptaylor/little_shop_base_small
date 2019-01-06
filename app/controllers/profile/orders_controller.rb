@@ -48,12 +48,11 @@ class Profile::OrdersController < ApplicationController
     end
   end
 
+#see below in order_params for explaination of :format
   def update
-    binding.pry
     @order = Order.find(params[:id])
     @order.update(shipping_address: order_params[:format])
     redirect_to profile_order_path(@order)
-    binding.pry
   end
 
   private
@@ -62,6 +61,7 @@ class Profile::OrdersController < ApplicationController
     render file: 'errors/not_found', status: 404 unless current_user && current_user.default?
   end
 
+#:format is the new shipping_address id to be assigned
   def order_params
     params.permit(:format)
   end

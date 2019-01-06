@@ -152,12 +152,16 @@ describe 'As a user' do
     visit profile_order_path(@order_3)
     expect(page).to_not have_button("Change Shipping Address")
     visit profile_path(@user_1)
-    visit profile_order_path(@order_1)
+    order_4 = create(:order, shipping_address: @address_1.id, user_id: @user_1.id)
+    visit profile_order_path(order_4)
+    expect(order_4.shipping_address).to eq(@address_1.id)
     within ".order-address-#{@address_3.id}" do
-      expect(@address_3.reload.shipping_address).to be false
       expect(page).to have_button("Change Shipping Address")
       click_button "Change Shipping Address"
-      expect(@address_3.reload.shipping_address).to be true
+    end
+    visit profile_order_path(order_4)
+    expect(order_4.reload.shipping_address).to eq(@address_3.id)
+    within ".order-address-#{@address_3.id}" do
       expect(page).to_not have_button("Change Shipping Address")
     end
   end

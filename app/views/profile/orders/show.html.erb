@@ -10,7 +10,7 @@
   <% @order.user.addresses.each do |full_address| %>
   <div class="order-address-<%= full_address.id %>">
     <%= full_address.nickname %>
-    <% if full_address.shipping_address %>
+    <% if full_address.id == @order.shipping_address%>
     <h3>This is your shipping_address for this order.</h3>
     <% else %>
     <p><%= button_to 'Change Shipping Address', profile_order_path(@order, full_address), method: :patch %></p>
