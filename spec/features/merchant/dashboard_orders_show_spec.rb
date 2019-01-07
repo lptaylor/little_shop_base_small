@@ -16,9 +16,11 @@ describe 'As a merchant' do
 
     visit dashboard_path
 
-    address_1 = create(:address, user: user, address:"123 Shady Glade" , default_address: true, shipping_address: false)
+    address_1.toggle(:shipping_address).save
     address_1.reload
+
     address_2 = create(:address, user: user, address:"This should work" , default_address: false, shipping_address: true)
+
     order_2 = create(:order, user: user, shipping_address: user.shipping_address.id)
 
     visit dashboard_order_path(order_2)
