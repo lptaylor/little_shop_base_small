@@ -2,16 +2,38 @@
 <%= tag.div class: 'profile' do %>
   <p><%= @user.email %></p>
   <%= tag.div id: 'address' do %>
-    <% @user.addresses.each do |full_address| %>
-    <div class= "address-<%= full_address.id %>">
-      <% if full_address.default_address %>
-      This is your default address
+    <div class="default-address">
+      <h2>This is your default address</h2>
+      <p><%= @user.primary_address.nickname %> </p>
+      <p><%= @user.primary_address.address %> </p>
+      <p><%= @user.primary_address.city %>, <%= @user.primary_address.state %> <%= @user.primary_address.zip %> </p>
+      <p><%= link_to 'Edit This Address', edit_profile_addresses_path(@user.primary_address)%> </p>
+      <% if @user.primary_address.enabled %>
+      <p><%= button_to "Disable This Address", toggle_active_profile_addresses_path(@user.primary_address)%> </p>
+      <% else %>
+      <p><%= button_to "Enable This Address", toggle_active_profile_addresses_path(@user.primary_address) %> </p>
       <% end %>
-      <%= full_address.nickname %>
-      <%= full_address.address %>
-      <%= full_address.city %>, <%= full_address.state %> <%= full_address.zip %>
+      <br>
+    </div>
+    <% @user.non_primary_addresses.each do |full_address| %>
+    <div class= "address-<%= full_address.id %>">
+      <p><%= full_address.nickname %> </p>
+      <p><%= full_address.address %> </p>
+      <p><%= full_address.city %>, <%= full_address.state %> <%= full_address.zip %></p>
+      <p><%= link_to 'Edit This Address', edit_profile_addresses_path(full_address)%></p>
+      <% if full_address.enabled %>
+      <p><%= button_to "Disable This Address", toggle_active_profile_addresses_path(full_address) %></p>
+      <% else %>
+      <p><%= button_to "Enable This Address", toggle_active_profile_addresses_path(full_address) %></p>
+      <% end %>
+      <p><%= button_to "Make This My Default Address", toggle_default_profile_addresses_path(full_address) %></p>
+      <br>
     </div>
     <% end %>
+  <% end %>
+
+  <% if @user == current_user %>
+    <%= link_to 'Add New Address', new_profile_addresses_path(@user) %>
   <% end %>
 
   <% if @user == current_user %>

@@ -6,11 +6,12 @@ RSpec.describe 'Merchant Dashboard Items page' do
   before :each do
     @merchant = create(:merchant)
     @admin = create(:admin)
-
+    @user = create(:user)
+    create(:address, user: @user)
     @items = create_list(:item, 3, user: @merchant)
     @items << create(:inactive_item, user: @merchant)
 
-    @order = create(:completed_order)
+    @order = create(:completed_order, user: @user, shipping_address: @user.primary_address.id)
     @oi_1 = create(:fulfilled_order_item, order: @order, item: @items[0], price: 1, quantity: 1, created_at: 2.hours.ago, updated_at: 50.minutes.ago)
   end
 

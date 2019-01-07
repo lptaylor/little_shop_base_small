@@ -14,6 +14,7 @@ RSpec.describe 'Cart workflow', type: :feature do
     end
     scenario 'as a registered user' do
       user = create(:user)
+      create(:address, user: user)
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
       visit cart_path
     end
@@ -29,6 +30,7 @@ RSpec.describe 'Cart workflow', type: :feature do
     end
     scenario 'as a registered user' do
       user = create(:user)
+      create(:address, user: user)
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
       visit item_path(@item)
     end
@@ -55,6 +57,7 @@ RSpec.describe 'Cart workflow', type: :feature do
     end
     scenario 'as a registered user' do
       user = create(:user)
+      create(:address, user: user)
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
       visit item_path(@item)
     end
@@ -96,6 +99,7 @@ RSpec.describe 'Cart workflow', type: :feature do
     end
     scenario 'as a registered user' do
       user = create(:user)
+      create(:address, user: user)
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
       visit item_path(@item)
     end
@@ -121,6 +125,7 @@ RSpec.describe 'Cart workflow', type: :feature do
     end
     scenario 'as a registered user' do
       user = create(:user)
+      create(:address, user: user)
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
       visit item_path(@item)
     end
@@ -175,6 +180,8 @@ RSpec.describe 'Cart workflow', type: :feature do
     end
     scenario 'as a registered user' do
       user = create(:user)
+      create(:address, user: user, default_address: true)
+
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
 
       visit item_path(@item)

@@ -6,7 +6,7 @@ class Profile::OrdersController < ApplicationController
   end
 
   def create
-    order = Order.create(user: current_user, status: :pending)
+    order = Order.create(user: current_user, status: :pending, shipping_address: current_user.shipping_address.id)
     @cart.items.each do |item|
       order.order_items.create!(
         item: item,
@@ -48,9 +48,21 @@ class Profile::OrdersController < ApplicationController
     end
   end
 
+#see below in order_params for explaination of :format
+  def update
+    @order = Order.find(params[:id])
+    @order.update(shipping_address: order_params[:format])
+    redirect_to profile_order_path(@order)
+  end
+
   private
 
   def require_default_user
     render file: 'errors/not_found', status: 404 unless current_user && current_user.default?
+  end
+
+#:format is the new shipping_address id to be assigned
+  def order_params
+    params.permit(:format)
   end
 end

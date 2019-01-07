@@ -4,8 +4,10 @@ class User < ApplicationRecord
   has_many :items, foreign_key: 'merchant_id'
   has_many :orders
   has_many :order_items, through: :orders
-  has_many :addresses
+  has_many :addresses, :dependent => :destroy
+
   accepts_nested_attributes_for :addresses
+
 
   validates_presence_of :name
   validates :email, presence: true, uniqueness: true
@@ -13,8 +15,25 @@ class User < ApplicationRecord
 
   enum role: [:default, :merchant, :admin]
 
+  def shipping_address
+    addresses.find_by(shipping_address: true)
+  end
+
+  def any_active_addresses?
+    true if addresses.where(enabled: true).count > 0
+  end
+
   def primary_address
     addresses.find_by(default_address: true)
+  end
+
+  def non_primary_addresses
+    addresses.where(default_address: false)
+  end
+
+  def non_primary_addresses_active
+    addresses.where(default_address: false)
+    .where(enabled: true)
   end
 
   def self.top_3_revenue_merchants
@@ -76,7 +95,7 @@ class User < ApplicationRecord
   def top_3_states
     Item.joins('inner join order_items oi on oi.item_id=items.id inner join orders o on o.id=oi.order_id inner join users u on o.user_id=u.id inner join addresses a on a.user_id=u.id')
       .select('a.state, sum(oi.quantity) as quantity_shipped')
-      .where("oi.fulfilled = ? AND items.merchant_id=?", true, self.id)
+      .where("oi.fulfilled = ? AND items.merchant_id=? AND a.shipping_address=?",  true, self.id, true)
       .group(:state)
       .order('quantity_shipped desc')
       .limit(3)
@@ -85,7 +104,7 @@ class User < ApplicationRecord
   def top_3_cities
     Item.joins('inner join order_items oi on oi.item_id=items.id inner join orders o on o.id=oi.order_id inner join users u on o.user_id=u.id inner join addresses a on a.user_id=u.id')
       .select('a.city, a.state, sum(oi.quantity) as quantity_shipped')
-      .where("oi.fulfilled = ? AND items.merchant_id=?", true, self.id)
+      .where("oi.fulfilled = ? AND items.merchant_id=? AND a.shipping_address=?", true, self.id, true)
       .group(:state, :city)
       .order('quantity_shipped desc')
       .limit(3)

@@ -9,7 +9,9 @@ RSpec.describe 'Upgrade/Downgrade users', type: :feature do
       @merchant_email = 'merchant@email.com'
       admin = create(:admin, email: @admin_email, password: @password)
       @user = create(:user, email: @user_email, password: @password)
+      create(:address, user: @user, default_address: true)
       @merchant = create(:merchant, email: @merchant_email, password: @password)
+      create(:address, user: @merchant, default_address: true)
 
       visit login_path
       expect(page).to have_link('Log in')

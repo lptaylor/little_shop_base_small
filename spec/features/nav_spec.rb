@@ -3,8 +3,11 @@ require 'rails_helper'
 RSpec.describe 'Site Nav', type: :feature do
   before :each do
     @user = create(:user)
+    create(:address, user: @user, default_address: true)
     @merchant = create(:merchant)
+    create(:address, user: @merchant, default_address: true)
     @admin = create(:admin)
+    create(:address, user: @admin, default_address: true)
   end
   it 'should show proper links for all visitors' do
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(nil)

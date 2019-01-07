@@ -7,6 +7,16 @@
   <p>Total Cost: <%= number_to_currency(@order.total_cost) %></p>
 
   <% if @order.status == 'pending' %>
+  <% @order.user.addresses.each do |full_address| %>
+  <div class="order-address-<%= full_address.id %>">
+    <%= full_address.nickname %>
+    <% if full_address.id == @order.shipping_address%>
+    <h3>This is your shipping_address for this order.</h3>
+    <% else %>
+    <p><%= button_to 'Change Shipping Address', profile_order_path(@order, full_address), method: :patch %></p>
+    <% end %>
+  </div>
+  <% end %>
   <p><%= button_to 'Cancel Order', profile_order_path(@order), method: :delete %></p>
   <% end %>
 

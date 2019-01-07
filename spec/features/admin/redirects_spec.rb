@@ -5,6 +5,7 @@ RSpec.describe 'Admin redirects', type: :feature do
     admin = create(:admin)
     @merchant = create(:merchant)
     @user = create(:user)
+    create(:address, user: @user, default_address: true)
 
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
   end
