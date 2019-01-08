@@ -32,6 +32,14 @@ class User < ApplicationRecord
         .group(:id)
   end
 
+  def self.customer_total_number_orders
+    User.joins(:orders)
+        .select("users.*, count(orders.id) as total_orders")
+        .where("orders.status=?", 1)
+        .where("users.role=?", 0)
+        .group(:id)
+  end
+  
   def shipping_address
     addresses.find_by(shipping_address: true)
   end
