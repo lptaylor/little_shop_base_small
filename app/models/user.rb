@@ -23,6 +23,15 @@ class User < ApplicationRecord
         .group(:id)
   end
 
+  def self.customer_total_this_merchant(merchant_id)
+    User.joins({order_items: :item})
+        .select("users.*, sum(order_items.price * order_items.quantity) as total_this_merchant")
+        .where("orders.status=?", 1)
+        .where("users.role=?", 0)
+        .where("items.merchant_id=?", merchant_id)
+        .group(:id)
+  end
+
   def shipping_address
     addresses.find_by(shipping_address: true)
   end
