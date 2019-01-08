@@ -37,4 +37,17 @@ describe 'As a Merchant' do
       expect(page).to have_link("Export to csv")
     end
   end
+
+  it 'allows merchant to download list of csv for current customers' do
+    within '.current-customers' do
+      expect(page).to have_content("Click here to download your current cutomers info:")
+      click_on "Export to csv"
+    end
+  end
+
+  it 'allows merchant to download list of csv for potential customers' do
+    within '.potential-customers' do
+      click_on "Export to csv"
+    end
+  end
 end
