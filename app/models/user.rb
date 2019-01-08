@@ -15,6 +15,14 @@ class User < ApplicationRecord
 
   enum role: [:default, :merchant, :admin]
 
+  def self.customer_total_all_merchants
+    User.joins(:order_items)
+        .select("users.*, sum(order_items.price * order_items.quantity) as total_all_merchants")
+        .where("orders.status=?", 1)
+        .where("users.role=?", 0)
+        .group(:id)
+  end
+
   def shipping_address
     addresses.find_by(shipping_address: true)
   end
