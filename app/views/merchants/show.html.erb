@@ -21,13 +21,13 @@
 
 <div class="current-customers">
   <% if current_merchant? %>
-    <h3>Click here to download your current cutomers info: <%= link_to "Export to csv" %></h3>
+    <h3>Click here to download your current cutomers info: <%= link_to "Export to csv", dashboard_path(format: "csv", set: 1, id: @merchant) %></h3>
   <% end %>
 </div>
 
 <div class="potential-customers">
   <% if current_merchant? %>
-    <h3>Click here to download potential cutomers info: <%= link_to "Export to csv" %></h3>
+    <h3>Click here to download potential cutomers info: <%= link_to "Export to csv", dashboard_path(format: "csv", set: 2, id: @merchant) %></h3>
   <% end %>
 </div>
 

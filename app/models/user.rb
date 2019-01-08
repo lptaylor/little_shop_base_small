@@ -15,31 +15,47 @@ class User < ApplicationRecord
 
   enum role: [:default, :merchant, :admin]
 
-  def self.customer_total_all_merchants
-    User.joins(:order_items)
-        .select("users.*, sum(order_items.price * order_items.quantity) as total_all_merchants")
-        .where("orders.status=?", 1)
-        .where("users.role=?", 0)
-        .group(:id)
+  def self.to_csv(merchant_id)
+  attributes = %w{name email total_this_merchant total_all_merchants}
+
+  CSV.generate(headers: true) do |csv|
+    csv << attributes
+    all.each do |user|
+      csv << user.attributes.values_at(*attributes)
+      end
+    end
   end
 
-  def self.customer_total_this_merchant(merchant_id)
+  # def customer_total_all_merchants
+  #   User.joins(:order_items)
+  #       .select("users.*, sum(order_items.price * order_items.quantity) as total_all_merchants")
+  #       .where("orders.status=?", 1)
+  #       .where("users.role=?", 0)
+  #       .where("users.active=?", true)
+  #       .group(:id)
+  # end
+
+  def current_customers(merchant_id)
     User.joins({order_items: :item})
-        .select("users.*, sum(order_items.price * order_items.quantity) as total_this_merchant")
+        .select("users.*, sum(order_items.price * order_items.quantity) as total_this_merchant, sum(order_items.price * order_items.quantity) as total_all_merchants")
         .where("orders.status=?", 1)
         .where("users.role=?", 0)
         .where("items.merchant_id=?", merchant_id)
+        .where("users.active=?", true)
+        .group(:id)
+        # .select("sum(order_items.price * order_items.quantity) as total_all_merchants")
+  end
+
+  def potential_customers(merchant_id)
+    User.joins(orders: {order_items: :item})
+        .select("users.*, count(orders.id) as total_orders, sum(order_items.price * order_items.quantity) as total_all_merchants")
+        .where("orders.status=?", 1)
+        .where("users.role=?", 0)
+        .where.not("items.merchant_id=?", merchant_id)
+        .where("users.active=?", true)
         .group(:id)
   end
 
-  def self.customer_total_number_orders
-    User.joins(:orders)
-        .select("users.*, count(orders.id) as total_orders")
-        .where("orders.status=?", 1)
-        .where("users.role=?", 0)
-        .group(:id)
-  end
-  
   def shipping_address
     addresses.find_by(shipping_address: true)
   end
