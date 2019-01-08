@@ -1,5 +1,4 @@
 class Profile::AddressesController < ApplicationController
-  # before_save :set_default
 
   def new
     @address = Address.new
