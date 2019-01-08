@@ -15,8 +15,8 @@ class User < ApplicationRecord
 
   enum role: [:default, :merchant, :admin]
 
-  def self.to_csv(merchant_id)
-  attributes = %w{name email total_this_merchant total_all_merchants}
+  def self.to_csv
+  attributes = %w{name email customer_total_this_merchant customer_total_all_merchants}
 
   CSV.generate(headers: true) do |csv|
     csv << attributes
@@ -26,34 +26,37 @@ class User < ApplicationRecord
     end
   end
 
-  # def customer_total_all_merchants
-  #   User.joins(:order_items)
-  #       .select("users.*, sum(order_items.price * order_items.quantity) as total_all_merchants")
-  #       .where("orders.status=?", 1)
-  #       .where("users.role=?", 0)
-  #       .where("users.active=?", true)
-  #       .group(:id)
-  # end
-
-  def current_customers(merchant_id)
-    User.joins({order_items: :item})
-        .select("users.*, sum(order_items.price * order_items.quantity) as total_this_merchant, sum(order_items.price * order_items.quantity) as total_all_merchants")
-        .where("orders.status=?", 1)
-        .where("users.role=?", 0)
-        .where("items.merchant_id=?", merchant_id)
+  def self.only_active_customers
+    User.where("users.role=?", 0)
         .where("users.active=?", true)
-        .group(:id)
-        # .select("sum(order_items.price * order_items.quantity) as total_all_merchants")
   end
 
-  def potential_customers(merchant_id)
-    User.joins(orders: {order_items: :item})
-        .select("users.*, count(orders.id) as total_orders, sum(order_items.price * order_items.quantity) as total_all_merchants")
+  def customer_total_all_merchants
+        order_items
+        .select("users.*, sum(order_items.price * order_items.quantity) as total_all_merchants")
         .where("orders.status=?", 1)
-        .where("users.role=?", 0)
-        .where.not("items.merchant_id=?", merchant_id)
-        .where("users.active=?", true)
         .group(:id)
+        .total_all_merchants
+  end
+
+  def customer_total_this_merchant(merchant_id)
+    User.joins({order_items: :item})
+        .select("users.*, sum(order_items.price * order_items.quantity) as total_this_merchant")
+        .where("orders.status=?", 1)
+        .where("items.merchant_id=?", merchant_id)
+        .group(:id)
+        .first
+        .total_this_merchant
+  end
+
+  def customer_total_number_orders_other_merchants(merchant_id)
+    User.joins(orders: {order_items: :item})
+        .select("users.*, count(orders.id) as total_orders")
+        .where("orders.status=?", 1)
+        .where.not("items.merchant_id=?", merchant_id)
+        .group(:id)
+        .first
+        .total_orders
   end
 
   def shipping_address

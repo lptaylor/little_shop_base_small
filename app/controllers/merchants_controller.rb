@@ -18,17 +18,10 @@ class MerchantsController < ApplicationController
 
   def show
     @merchant = current_user
-    @current_customers = @merchant.customer_total_this_merchant(@merchant)
+    @users = User.only_active_customers
     respond_to do |format|
       format.html
-      # if params(set: 1)
-      binding.pry
-      format.csv { send_data @current_customers.to_csv(params[:id]), filename: "current_customers.csv" }
-      # elsif params(set: 2)
-      #   format.csv { send_data @users.current_customers_to_csv, filename: "potential_customers.csv" }
-      # else
-      #   render './public/404'
-      # end
+      format.csv { send_data @users.to_csv, filename: "users-#{Date.today}.csv" }
     end
     @orders = @merchant.my_pending_orders
     @top_5_items = @merchant.top_items_by_quantity(5)
