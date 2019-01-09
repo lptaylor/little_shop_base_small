@@ -44,11 +44,7 @@ RSpec.describe 'Admin User Show workflow', type: :feature do
       fill_in :user_password,	with: "new_password"
       fill_in :user_password_confirmation,	with: "new_password"
       fill_in :user_name,	with: name
-      fill_in :user_addresses_attributes_0_nickname,	with: nickname
-      fill_in :user_addresses_attributes_0_address,	with: address
-      fill_in :user_addresses_attributes_0_city,	with: city
-      fill_in :user_addresses_attributes_0_state,	with: state
-      fill_in :user_addresses_attributes_0_zip,	with: zip
+    
       click_button 'Update User'
 
       user_check = User.find(@user_1.id)
