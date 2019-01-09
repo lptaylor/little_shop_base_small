@@ -42,12 +42,13 @@ class User < ApplicationRecord
   end
 
   def self.current_customers(merchant)
-      User.joins(order_items: :item)
-          .where(role: "default")
-          .where(active: true)
-          .where("items.merchant_id = ?", merchant.id)
-          .where("order_items.fulfilled = true")
-          .group(:id)
+      joins(order_items: :item)
+      .select("users.*, sum(order_items.price * order_items.quantity) as total_this_merchant")
+      .where(role: "default")
+      .where(active: true)
+      .where("items.merchant_id = ?", merchant.id)
+      .where("order_items.fulfilled = true")
+      .group(:id)
   end
 
   def self.potential_customers(merchant)
@@ -59,16 +60,6 @@ class User < ApplicationRecord
       .group(:id)
   end
 
-  # def self.potential_customers(merchant_id)
-  #   User.joins(orders: {order_items: :item})
-  #   .select("users.*, count(orders.id) as total_orders, sum(order_items.price * order_items.quantity) as total_all_merchants")
-  #   .where("users.role=?", 0)
-  #   .where("users.active=?", true)
-  #   .where("orders.status=?", 1)
-  #   .where.not("items.merchant_id=?", merchant_id)
-  #   .group(:id)
-  # end
-
   # def self.customer_total_all_merchants
   #   User.joins(:order_items)
   #       .select("users.*, sum(order_items.price * order_items.quantity) as total_all_merchants")
@@ -78,15 +69,15 @@ class User < ApplicationRecord
   #       .group(:id)
   # end
 
-  def self.customer_total_this_merchant(merchant_id)
-    User.joins({order_items: :item})
-        .select("users.*, sum(order_items.price * order_items.quantity) as total_this_merchant")
-        .where("orders.status=?", 1)
-        .where("items.merchant_id=?", merchant_id)
-        .where("users.role=?", 0)
-        .where("users.active=?", true)
-        .group(:id)
-  end
+  # def self.customer_total_this_merchant(merchant_id)
+  #   User.joins({order_items: :item})
+  #       .select("users.*, sum(order_items.price * order_items.quantity) as total_this_merchant")
+  #       .where("orders.status=?", 1)
+  #       .where("items.merchant_id=?", merchant_id)
+  #       .where("users.role=?", 0)
+  #       .where("users.active=?", true)
+  #       .group(:id)
+  # end
 
 
   def shipping_address
