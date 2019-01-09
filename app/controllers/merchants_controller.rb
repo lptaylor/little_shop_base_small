@@ -18,7 +18,6 @@ class MerchantsController < ApplicationController
 
   def show
     @merchant = current_user
-    @users = User.only_active_customers
     @potental_customers = User.potental_customers(@merchant)
     @current_customers = User.customer_total_this_merchant(@merchant)
     respond_to do |format|

@@ -8,7 +8,6 @@ describe 'As a Merchant' do
     create(:address, user: @merchant_1)
     @merchant_2 = create(:user, role: 1)
     create(:address, user: @merchant_2)
-
     @item_1 = create(:item, price: 25.00, user: @merchant_1)
     @item_2 = create(:item, price: 50.00, user: @merchant_1)
     @item_3 = create(:item, price: 50.00, user: @merchant_2)

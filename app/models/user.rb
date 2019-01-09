@@ -37,9 +37,8 @@ class User < ApplicationRecord
     end
   end
 
-  def self.only_active_customers
-    User.where("users.role=?", 0)
-        .where("users.active=?", true)
+  def total_all_merchants
+    order_items.sum("order_items.price * order_items.quantity")
   end
 
   def self.potental_customers(merchant_id)
@@ -52,16 +51,14 @@ class User < ApplicationRecord
     .group(:id)
   end
 
-  def self.customer_total_all_merchants
-    User.joins(:order_items)
-        .select("users.*, sum(order_items.price * order_items.quantity) as total_all_merchants")
-        .where("orders.status=?", 1)
-        .where("users.role=?", 0)
-        .where("users.active=?", true)
-        .group(:id)
-        .first
-        .total_all_merchants
-  end
+  # def self.customer_total_all_merchants
+  #   User.joins(:order_items)
+  #       .select("users.*, sum(order_items.price * order_items.quantity) as total_all_merchants")
+  #       .where("orders.status=?", 1)
+  #       .where("users.role=?", 0)
+  #       .where("users.active=?", true)
+  #       .group(:id)
+  # end
 
   def self.customer_total_this_merchant(merchant_id)
     User.joins({order_items: :item})

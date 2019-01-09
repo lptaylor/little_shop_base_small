@@ -215,7 +215,6 @@ RSpec.describe User, type: :model do
 
       @order_5 = create(:completed_order, user: @user_1)
       @oi_5 = create(:fulfilled_order_item, item: @item_2, order: @order_5, quantity: 1, price: 50, created_at: 10.minutes.ago, updated_at: 5.minute.ago)
-
     end
     it '.customer_total_this_merchant' do
       expect(@merchant_1.customer_total_this_merchant(@merchant_1.id).first.total_this_merchant).to eq(@oi_1.subtotal)
