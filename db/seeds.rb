@@ -11,7 +11,7 @@ Address.destroy_all
 admin = create(:admin)
 create(:address, user: admin)
 user = create(:user)
-create(:address, user: user)
+create(:address, user: user, shipping_address: true, default_address: true)
 merchant_1 = create(:merchant, email:'merch1@gmail.com', password: "1234")
 create(:address, user: merchant_1)
 merchant_2 = create(:merchant, email:'merch2@gmail.com', password: "1234")
