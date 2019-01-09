@@ -15,6 +15,71 @@ class User < ApplicationRecord
 
   enum role: [:default, :merchant, :admin]
 
+  def self.potential_customers_to_csv
+  attributes = %w{name email total_all_merchants total_orders}
+
+  CSV.generate(headers: true) do |csv|
+    csv << attributes
+    all.each do |user|
+      csv << user.attributes.values_at(*attributes)
+      end
+    end
+  end
+
+  def self.current_customers_to_csv
+  attributes = %w{name email total_this_merchant total_all_merchants}
+
+  CSV.generate(headers: true) do |csv|
+    csv << attributes
+    all.each do |user|
+      csv << user.attributes.values_at(*attributes)
+      end
+    end
+  end
+
+  def total_all_merchants
+    order_items.sum("order_items.price * order_items.quantity")
+  end
+
+  def self.current_customers(merchant)
+      joins(order_items: :item)
+      .select("users.*, sum(order_items.price * order_items.quantity) as total_this_merchant")
+      .where(role: "default")
+      .where(active: true)
+      .where("items.merchant_id = ?", merchant.id)
+      .where("order_items.fulfilled = true")
+      .group(:id)
+  end
+
+  def self.potential_customers(merchant)
+      joins(orders: {order_items: :item})
+      .select("users.*, count(orders.id) as total_orders, sum(order_items.price * order_items.quantity) as total_all_merchants")
+      .where(role: "default")
+      .where(active: true)
+      .where.not(id: current_customers(merchant))
+      .group(:id)
+  end
+
+  # def self.customer_total_all_merchants
+  #   User.joins(:order_items)
+  #       .select("users.*, sum(order_items.price * order_items.quantity) as total_all_merchants")
+  #       .where("orders.status=?", 1)
+  #       .where("users.role=?", 0)
+  #       .where("users.active=?", true)
+  #       .group(:id)
+  # end
+
+  # def self.customer_total_this_merchant(merchant_id)
+  #   User.joins({order_items: :item})
+  #       .select("users.*, sum(order_items.price * order_items.quantity) as total_this_merchant")
+  #       .where("orders.status=?", 1)
+  #       .where("items.merchant_id=?", merchant_id)
+  #       .where("users.role=?", 0)
+  #       .where("users.active=?", true)
+  #       .group(:id)
+  # end
+
+
   def shipping_address
     addresses.find_by(shipping_address: true)
   end

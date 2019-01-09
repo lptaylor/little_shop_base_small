@@ -19,6 +19,18 @@
 <%= button_to "Downgrade to User", admin_merchant_downgrade_path(@merchant), method: :patch %>
 <% end %>
 
+<div class="current-customers">
+  <% if current_merchant? %>
+    <h3>Click here to download your current cutomers info: <%= link_to "Export to csv", dashboard_path(format: "csv", set: 1, id: @merchant) %></h3>
+  <% end %>
+</div>
+
+<div class="potential-customers">
+  <% if current_merchant? %>
+    <h3>Click here to download potential cutomers info: <%= link_to "Export to csv", dashboard_path(format: "csv", id: @merchant) %></h3>
+  <% end %>
+</div>
+
 <%= tag.div id: 'orders' do %>
   <% if @orders.empty? %>
     You don't have any pending orders to fulfill
