@@ -225,14 +225,18 @@ RSpec.describe User, type: :model do
       expect(User.potential_customers(@merchant_1)).to eq(potential_customers)
     end
     it '.customer_total_this_merchant' do
-      expect(@merchant_1.customer_total_this_merchant(@merchant_1.id).first.total_this_merchant).to eq(@oi_1.subtotal)
+      expect(User.current_customers(@merchant_1).first.total_this_merchant).to eq(@oi_1.subtotal)
     end
-    it '.customer_total_all_merchants' do
+    it '.customer_total_all_merchants_for_potential_customers' do
+      total = (@oi_2.subtotal)
+      expect(User.potential_customers(@merchant_1).first.total_all_merchants).to eq(total)
+    end
+    it '.customer_total_all_merchants_for_current_customers' do
       total = (@oi_1.subtotal + @oi_5.subtotal)
-      expect(@merchant_1.customer_total_all_merchants.first.total_all_merchants).to eq(total)
+      expect(User.current_customers(@merchant_1).first.total_all_merchants).to eq(total)
     end
     it '.customer_total_number_orders_other_merchants' do
-      expect(@merchant_1.customer_total_number_orders_other_merchants(@merchant_1.id).first.total_orders).to eq(1)
+      expect(User.potential_customers(@merchant_1).first.total_orders).to eq(1)
     end
   end
 end

@@ -56,29 +56,9 @@ class User < ApplicationRecord
       .select("users.*, count(orders.id) as total_orders, sum(order_items.price * order_items.quantity) as total_all_merchants")
       .where(role: "default")
       .where(active: true)
-      .where.not(id: current_customers(merchant))
+      .where.not(id: current_customers(merchant).ids)
       .group(:id)
   end
-
-  # def self.customer_total_all_merchants
-  #   User.joins(:order_items)
-  #       .select("users.*, sum(order_items.price * order_items.quantity) as total_all_merchants")
-  #       .where("orders.status=?", 1)
-  #       .where("users.role=?", 0)
-  #       .where("users.active=?", true)
-  #       .group(:id)
-  # end
-
-  # def self.customer_total_this_merchant(merchant_id)
-  #   User.joins({order_items: :item})
-  #       .select("users.*, sum(order_items.price * order_items.quantity) as total_this_merchant")
-  #       .where("orders.status=?", 1)
-  #       .where("items.merchant_id=?", merchant_id)
-  #       .where("users.role=?", 0)
-  #       .where("users.active=?", true)
-  #       .group(:id)
-  # end
-
 
   def shipping_address
     addresses.find_by(shipping_address: true)
