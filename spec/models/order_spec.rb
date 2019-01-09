@@ -77,12 +77,13 @@ RSpec.describe Order, type: :model do
 
   describe 'instance methods' do
     before :each do
-      user = create(:user)
+      @user = create(:user)
+      @address_1 = create(:address, user: @user, city: 'Denver', state: 'CO', default_address: true)
       @item_1 = create(:item)
       @item_2 = create(:item)
       yesterday = 1.day.ago
 
-      @order = create(:order, user: user, created_at: yesterday)
+      @order = create(:order, user: @user, created_at: yesterday, shipping_address: @address_1)
       @oi_1 = create(:order_item, order: @order, item: @item_1, price: 1, quantity: 1, created_at: yesterday, updated_at: yesterday)
       @oi_2 = create(:fulfilled_order_item, order: @order, item: @item_2, price: 2, quantity: 1, created_at: yesterday, updated_at: 2.hours.ago)
     end
@@ -185,6 +186,10 @@ RSpec.describe Order, type: :model do
 
       expect(order.item_fulfilled?(item_1.id)).to eq(false)
       expect(order.item_fulfilled?(item_2.id)).to eq(true)
+    end
+
+    it '.shipping_address_details' do
+      expect(@order.shipping_address_details(@address_1)).to eq(@address_1)
     end
   end
 end

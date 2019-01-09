@@ -16,7 +16,7 @@
       <h4>Street Address: <%= current_user.primary_address.address %></h4>
       <h4>City, State Zip:<%= current_user.primary_address.city %>,<%= current_user.primary_address.state %><%= current_user.primary_address.zip %></h4>
     </div>
-      <% current_user.non_primary_addresses_active.each do |full_address| %>
+      <% current_user.non_primary_addresses.each do |full_address| %>
       <div class="secondary-addresses-<%=full_address.id%>">
       <h3>Default Address: <%= full_address.nickname %></h3>
       <% if full_address.shipping_address %>

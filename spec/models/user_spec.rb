@@ -222,7 +222,7 @@ RSpec.describe User, type: :model do
     end
     it 'returns list of potential_customers' do
       potential_customers = [@user_2, @user_3, @user_4]
-      expect(User.potential_customers(@merchant_1)).to eq(potential_customers)
+      expect(User.potential_customers(@merchant_1).to_a).to eq(potential_customers)
     end
     it '.customer_total_this_merchant' do
       expect(User.current_customers(@merchant_1).first.total_this_merchant).to eq(@oi_1.subtotal)
@@ -237,6 +237,44 @@ RSpec.describe User, type: :model do
     end
     it '.customer_total_number_orders_other_merchants' do
       expect(User.potential_customers(@merchant_1).first.total_orders).to eq(1)
+    end
+  end
+  describe 'address methods' do
+    before(:each) do
+      @user_1 = create(:user)
+      @address_1 = create(:address, user: @user_1, city: 'Denver', state: 'CO', default_address: false, shipping_address: true)
+      @address_2 = create(:address, user: @user_1, city: 'Denver', state: 'CO', default_address: true, shipping_address: false)
+      @user_2 = create(:user)
+      create(:address, user: @user_2, city: 'NYC', state: 'NY', default_address: true, enabled: false)
+      @user_3 = create(:user)
+      @address_3 = create(:address, user: @user_3, city: 'Seattle', state: 'WA', default_address: true)
+      @address_4 = create(:address, user: @user_3, city: 'Seattle', state: 'WA', default_address: false)
+      @address_5 = create(:address, user: @user_3, city: 'Seattle', state: 'WA', default_address: false)
+      @user_4 = create(:user)
+      @address_6 = create(:address, user: @user_4, city: 'Seattle', state: 'FL', default_address: true)
+      @address_7 = create(:address, user: @user_4, city: 'Seattle', state: 'WA', default_address: false, enabled: false)
+      @address_8 = create(:address, user: @user_4, city: 'Seattle', state: 'WA', default_address: false, enabled: false)
+
+    end
+    it '.shipping_address' do
+      expect(@user_1.shipping_address).to eq(@address_1)
+      expect(@user_1.shipping_address).to_not eq(@address_2)
+    end
+    it 'any_active_addresses?' do
+      expect(@user_1.any_active_addresses?).to be true
+      expect(@user_2.any_active_addresses?).to be nil
+    end
+    it '.primary_address' do
+      expect(@user_1.primary_address).to eq(@address_2)
+      expect(@user_1.primary_address).to_not eq(@address_1)
+    end
+    it '.non_primary_addresses' do
+      non_primary_addresses = [@address_4, @address_5]
+      expect(@user_3.non_primary_addresses).to eq(non_primary_addresses)
+    end
+    it '.non_primary_addresses_active' do
+      expect(@user_4.non_primary_addresses_active?).to be nil
+      expect(@user_1.non_primary_addresses_active?).to be true
     end
   end
 end

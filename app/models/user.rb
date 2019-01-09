@@ -76,9 +76,8 @@ class User < ApplicationRecord
     addresses.where(default_address: false)
   end
 
-  def non_primary_addresses_active
-    addresses.where(default_address: false)
-    .where(enabled: true)
+  def non_primary_addresses_active?
+    true if addresses.where("default_address=false AND enabled=true", false, true).count > 0
   end
 
   def self.top_3_revenue_merchants
