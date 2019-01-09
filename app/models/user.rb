@@ -15,7 +15,7 @@ class User < ApplicationRecord
 
   enum role: [:default, :merchant, :admin]
 
-  def self.potental_customers_to_csv
+  def self.potential_customers_to_csv
   attributes = %w{name email total_all_merchants total_orders}
 
   CSV.generate(headers: true) do |csv|
@@ -41,15 +41,33 @@ class User < ApplicationRecord
     order_items.sum("order_items.price * order_items.quantity")
   end
 
-  def self.potental_customers(merchant_id)
-    User.joins(orders: {order_items: :item})
-    .select("users.*, count(orders.id) as total_orders, sum(order_items.price * order_items.quantity) as total_all_merchants")
-    .where("users.role=?", 0)
-    .where("users.active=?", true)
-    .where("orders.status=?", 1)
-    .where.not("items.merchant_id=?", merchant_id)
-    .group(:id)
+  def self.current_customers(merchant)
+      User.joins(order_items: :item)
+          .where(role: "default")
+          .where(active: true)
+          .where("items.merchant_id = ?", merchant.id)
+          .where("order_items.fulfilled = true")
+          .group(:id)
   end
+
+  def self.potential_customers(merchant)
+      joins(orders: {order_items: :item})
+      .select("users.*, count(orders.id) as total_orders, sum(order_items.price * order_items.quantity) as total_all_merchants")
+      .where(role: "default")
+      .where(active: true)
+      .where.not(id: current_customers(merchant))
+      .group(:id)
+  end
+
+  # def self.potential_customers(merchant_id)
+  #   User.joins(orders: {order_items: :item})
+  #   .select("users.*, count(orders.id) as total_orders, sum(order_items.price * order_items.quantity) as total_all_merchants")
+  #   .where("users.role=?", 0)
+  #   .where("users.active=?", true)
+  #   .where("orders.status=?", 1)
+  #   .where.not("items.merchant_id=?", merchant_id)
+  #   .group(:id)
+  # end
 
   # def self.customer_total_all_merchants
   #   User.joins(:order_items)

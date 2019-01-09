@@ -216,6 +216,14 @@ RSpec.describe User, type: :model do
       @order_5 = create(:completed_order, user: @user_1)
       @oi_5 = create(:fulfilled_order_item, item: @item_2, order: @order_5, quantity: 1, price: 50, created_at: 10.minutes.ago, updated_at: 5.minute.ago)
     end
+    it 'returns list of current customers' do
+      current_customers = [@user_1]
+      expect(User.current_customers(@merchant_1)).to eq(current_customers)
+    end
+    it 'returns list of potential_customers' do
+      potential_customers = [@user_2, @user_3, @user_4]
+      expect(User.potential_customers(@merchant_1)).to eq(potential_customers)
+    end
     it '.customer_total_this_merchant' do
       expect(@merchant_1.customer_total_this_merchant(@merchant_1.id).first.total_this_merchant).to eq(@oi_1.subtotal)
     end

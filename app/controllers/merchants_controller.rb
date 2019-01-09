@@ -18,15 +18,15 @@ class MerchantsController < ApplicationController
 
   def show
     @merchant = current_user
-    @potental_customers = User.potental_customers(@merchant)
-    @current_customers = User.customer_total_this_merchant(@merchant)
+    @potential_customers = User.potential_customers(@merchant)
+    @current_customers = User.current_customers(@merchant)
     respond_to do |format|
       format.html
       format.csv do
         if params[:set].present?
           send_data @current_customers.current_customers_to_csv, filename: "current-customers.csv"
         else
-          send_data @potental_customers.potental_customers_to_csv, filename: "potential-customers.csv"
+          send_data @potential_customers.potential_customers_to_csv, filename: "potential-customers.csv"
         end
       end
     end
